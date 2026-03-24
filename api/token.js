@@ -5,9 +5,15 @@ export default async function handler(req, res) {
   const clientId = process.env.CLIENT_ID;
   const clientSecret = process.env.CLIENT_SECRET;
 
+  // DETEKSI 1: Vercel lupa nyimpen rahasia?
+  if (!clientId || !clientSecret) {
+    return res.status(400).json({ 
+      error: 'CLIENT_ID atau CLIENT_SECRET kosong di Vercel! Cek Environment Variables lu dan wajib Redeploy.' 
+    });
+  }
+
   let bodyData = {};
   
-  // Skenario 1: Login pertama kali dapet kode
   if (code) {
     bodyData = {
       client_id: clientId,
@@ -16,9 +22,7 @@ export default async function handler(req, res) {
       grant_type: 'authorization_code',
       redirect_uri: 'postmessage' 
     };
-  } 
-  // Skenario 2: Token basi, minta diperpanjang
-  else if (refresh_token) {
+  } else if (refresh_token) {
     bodyData = {
       client_id: clientId,
       client_secret: clientSecret,
@@ -26,7 +30,7 @@ export default async function handler(req, res) {
       grant_type: 'refresh_token'
     };
   } else {
-    return res.status(400).json({ error: 'Butuh code atau refresh_token' });
+    return res.status(400).json({ error: 'Butuh code atau refresh_token woy' });
   }
 
   try {
@@ -37,8 +41,17 @@ export default async function handler(req, res) {
     });
     
     const data = await tokenRes.json();
+    
+    // DETEKSI 2: Google nolak ngasih token? Kita bongkar alasannya!
+    if (!tokenRes.ok) {
+      return res.status(400).json({ 
+        error: `Ditolak Google: ${data.error_description || data.error}` 
+      });
+    }
+
+    // Kalau sukses, balikin datanya
     res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Server Vercel Error: ' + error.message });
   }
 }
