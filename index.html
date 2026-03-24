@@ -28,12 +28,16 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .login-btn{display:flex;align-items:center;gap:12px;background:var(--surface);border:2px solid var(--border);border-radius:50px;padding:14px 28px;font-size:15px;font-weight:600;font-family:inherit;color:var(--text);cursor:pointer;box-shadow:var(--shadow);transition:all .2s;-webkit-tap-highlight-color:transparent}
 .login-btn:active{transform:scale(.96);box-shadow:none}
 
-/* ── Top Bar ── */
+/* ── Top Bar & Multi-Account ── */
 .topbar{display:flex;align-items:center;gap:12px;padding:14px 18px 10px;background:var(--bg);z-index:10;position:sticky;top:0}
 .topbar-search{flex:1;display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:50px;padding:10px 16px;box-shadow:var(--shadow);cursor:pointer}
 .topbar-search span{font-size:14px;color:var(--text3)}
-.avatar-btn{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0;cursor:pointer;box-shadow:0 2px 8px rgba(212,82,42,.35);overflow:hidden;border:2px solid var(--surface)}
+.account-list{display:flex;gap:6px;align-items:center}
+.avatar-btn{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15);overflow:hidden;border:2px solid var(--surface);transition:all .2s}
 .avatar-btn img{width:100%;height:100%;object-fit:cover}
+.avatar-btn.active-acc{border-color:var(--accent);transform:scale(1.15);box-shadow:0 4px 12px rgba(212,82,42,.4)}
+.avatar-btn.add-btn{background:var(--surface);color:var(--text2);border:2px dashed var(--border);box-shadow:none}
+.avatar-btn.add-btn:active{background:var(--surface2)}
 
 /* ── Tabs ── */
 .tabs{display:flex;gap:8px;padding:4px 18px 12px;overflow-x:auto;scrollbar-width:none}
@@ -47,7 +51,6 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .empty-state{text-align:center;padding:60px 20px;color:var(--text3)}
 .empty-state svg{margin-bottom:16px;opacity:.4}
 .empty-state p{font-size:15px;font-weight:500;color:var(--text2);margin-bottom:6px}
-.empty-state span{font-size:13px}
 
 /* ── Loading ── */
 .loading-skeleton{padding:0 12px}
@@ -55,9 +58,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .skel-avatar{width:40px;height:40px;border-radius:50%;background:var(--surface2);flex-shrink:0}
 .skel-body{flex:1}
 .skel-line{height:12px;border-radius:6px;background:var(--surface2);margin-bottom:8px}
-.skel-line.w60{width:60%}
-.skel-line.w80{width:80%}
-.skel-line.w40{width:40%}
+.skel-line.w60{width:60%} .skel-line.w80{width:80%} .skel-line.w40{width:40%}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
 /* ── Mail Item ── */
@@ -77,101 +78,44 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .mail-subject{font-size:13.5px;font-weight:400;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mail-item.unread .mail-subject{font-weight:600}
 .mail-preview{font-size:12.5px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
-.mail-footer{display:flex;align-items:center;justify-content:space-between;margin-top:7px}
-.mail-labels{display:flex;gap:5px;flex-wrap:wrap}
-.mail-label{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:50px;letter-spacing:.02em}
-
-.icon-btn{background:none;border:none;cursor:pointer;color:var(--text3);padding:4px;border-radius:8px;transition:color .15s,background .15s;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center}
-.icon-btn:active{background:var(--surface2)}
-.icon-btn.starred{color:#FBBF24}
-.icon-btn.trashed{color:#EF4444}
-
-/* ── FAB ── */
-.fab{position:fixed;bottom:calc(var(--tab-h) + 16px);right:calc(50% - 215px + 16px);width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(212,82,42,.45);cursor:pointer;z-index:20;border:none;-webkit-tap-highlight-color:transparent;transition:transform .2s}
-.fab:active{transform:scale(.9)}
-@media(max-width:430px){.fab{right:16px}}
 
 /* ── Bottom Nav ── */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:var(--tab-h);background:var(--surface);border-top:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-around;padding:0 8px;z-index:15}
 .nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:1;padding:8px 4px;cursor:pointer;color:var(--text3);transition:color .2s;-webkit-tap-highlight-color:transparent;position:relative}
 .nav-item.active{color:var(--accent)}
 .nav-label{font-size:10px;font-weight:500;letter-spacing:.02em}
-.nav-badge{position:absolute;top:6px;right:calc(50% - 14px);background:var(--accent);color:#fff;font-size:9px;font-weight:700;min-width:16px;height:16px;border-radius:50px;display:flex;align-items:center;justify-content:center;padding:0 4px}
 
-/* ── Overlay Modal (Profile & Compose) ── */
-.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:40;display:flex;align-items:flex-end;max-width:430px;left:50%;transform:translateX(-50%);transition:opacity .25s}
-.sheet-overlay.hidden{opacity:0;pointer-events:none}
-.sheet-box{width:100%;background:var(--surface);border-radius:24px 24px 0 0;padding:20px 18px 32px;box-shadow:0 -8px 40px rgba(0,0,0,.12);transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.sheet-overlay.hidden .sheet-box{transform:translateY(100%)}
-.sheet-handle{width:36px;height:4px;background:var(--border);border-radius:50px;margin:0 auto 16px}
-.sheet-btn{width:100%;padding:14px;font-size:15px;font-weight:600;border:none;border-radius:14px;cursor:pointer;font-family:inherit;transition:transform .15s;-webkit-tap-highlight-color:transparent}
-.sheet-btn:active{transform:scale(.97)}
-
-/* ── Detail View ── */
-.detail-view{position:fixed;inset:0;background:var(--bg);z-index:30;display:flex;flex-direction:column;max-width:430px;left:50%;transform:translateX(-50%);transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s}
+/* ── Detail View (Fix Lebar Penuh) ── */
+.detail-view{position:fixed;inset:0;width:100%;background:var(--bg);z-index:30;display:flex;flex-direction:column;max-width:430px;left:50%;transform:translateX(-50%);transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s}
 .detail-view.hidden{transform:translateX(-50%) translateY(100%);opacity:0;pointer-events:none}
-.detail-topbar{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1.5px solid var(--border);flex-shrink:0}
+.detail-topbar{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1.5px solid var(--border);flex-shrink:0;background:var(--surface)}
 .back-btn{background:none;border:none;cursor:pointer;color:var(--text);padding:4px;-webkit-tap-highlight-color:transparent}
-.back-btn:active{opacity:.5}
 .detail-title-bar{flex:1;font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .detail-action-btns{display:flex;gap:4px}
 .detail-action-btn{background:none;border:none;cursor:pointer;color:var(--text2);padding:7px;border-radius:50%;transition:background .15s;-webkit-tap-highlight-color:transparent}
-.detail-action-btn:active{background:var(--surface2)}
 .detail-action-btn.active-action{color:var(--accent)}
-
-.detail-body{flex:1;overflow-y:auto;padding:20px 18px 90px;scrollbar-width:none}
+.detail-body{flex:1;overflow-y:auto;padding:20px 18px 90px;scrollbar-width:none;background:var(--surface)}
 .detail-body::-webkit-scrollbar{display:none}
 .detail-subject{font-family:'DM Serif Display',serif;font-size:22px;line-height:1.3;color:var(--text);margin-bottom:16px}
 .detail-meta{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1.5px solid var(--border)}
-.detail-meta-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;text-shadow:0 1px 2px rgba(0,0,0,.2)}
-.detail-meta-avatar img{width:100%;height:100%;object-fit:cover}
-.detail-meta-info{flex:1;min-width:0}
-.detail-meta-from{font-size:14px;font-weight:600;color:var(--text)}
-.detail-meta-to{font-size:12px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.detail-meta-time{font-size:11px;color:var(--text3);flex-shrink:0;text-align:right}
 .detail-content{font-size:14.5px;line-height:1.8;color:var(--text2);word-break:break-word}
+.detail-content img{max-width:100%;height:auto}
 
-/* ── Reply Bar ── */
-.reply-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;padding:12px 16px;background:var(--surface);border-top:1.5px solid var(--border);display:flex;gap:10px;align-items:center;z-index:35}
-.reply-input{flex:1;background:var(--surface2);border:1.5px solid var(--border);border-radius:50px;padding:10px 16px;font-size:14px;font-family:inherit;color:var(--text);outline:none;transition:border-color .2s}
-.reply-input:focus{border-color:var(--accent)}
-.reply-send{width:40px;height:40px;border-radius:50%;background:var(--accent);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
-
-/* ── Compose Compose Field ── */
-.compose-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.compose-title{font-size:18px;font-weight:700}
-.compose-close{background:var(--surface2);border:none;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2)}
-.compose-field{border-bottom:1.5px solid var(--border);padding:12px 0;display:flex;align-items:center;gap:10px}
-.compose-label{font-size:12px;font-weight:600;color:var(--text3);width:36px;flex-shrink:0}
-.compose-input{flex:1;border:none;background:transparent;font-size:14px;font-family:inherit;color:var(--text);outline:none}
-.compose-body-input{width:100%;min-height:120px;border:none;background:transparent;font-size:14px;font-family:inherit;color:var(--text);outline:none;resize:none;padding:14px 0;line-height:1.7}
-
-/* ── Toast & Modals ── */
-.toast{position:fixed;bottom:calc(var(--tab-h) + 80px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;padding:10px 20px;border-radius:50px;font-size:13px;font-weight:500;z-index:100;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center}
+/* ── Modal & Toast ── */
+.toast{position:fixed;bottom:calc(var(--tab-h) + 20px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;padding:10px 20px;border-radius:50px;font-size:13px;font-weight:500;z-index:100;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;max-width:430px;left:50%;transform:translateX(-50%);transition:opacity .2s}
 .modal-overlay.hidden{opacity:0;pointer-events:none}
 .modal-box{background:var(--surface);border-radius:20px;padding:24px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.2)}
-
-/* ── Label colors ── */
-.lbl-INBOX{background:#EFF6FF;color:#2563EB}
-.lbl-SENT{background:#ECFDF5;color:#059669}
-.lbl-STARRED{background:#FFFBEB;color:#D97706}
-.lbl-IMPORTANT{background:#FEF2F2;color:#DC2626}
-.lbl-CATEGORY_PROMOTIONS{background:#FFF7ED;color:#C2410C}
-.lbl-CATEGORY_SOCIAL{background:#F0FDF4;color:#16A34A}
-.lbl-CATEGORY_UPDATES{background:#F5F3FF;color:#7C3AED}
-.lbl-UNREAD{background:#FEF2F2;color:#DC2626}
 </style>
 </head>
 <body>
 
 <div id="loginScreen">
-  <div class="login-logo">
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-  </div>
+  <div class="login-logo"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
   <h1 class="login-title">Mail</h1>
-  <p class="login-sub">Workspace eksklusif Anda. Otorisasi dengan Google untuk melanjutukan.</p>
+  <p class="login-sub">Workspace eksklusif Anda. Otorisasi dengan Google untuk melanjutkan.</p>
   <button class="login-btn" onclick="handleLogin()">
     <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
     Masuk dengan Google
@@ -180,78 +124,31 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 
 <div class="app" id="mainApp" style="display:none">
   <div class="topbar">
-    <div class="topbar-search" onclick="showToast('Pencarian eksklusif sedang disiapkan.')">
+    <div class="topbar-search" onclick="showToast('Pencarian segera hadir.')">
       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <span>Cari email…</span>
     </div>
-    <div class="avatar-btn" id="userAvatar" onclick="openProfile()">?</div>
+    <div class="account-list" id="accountList"></div>
   </div>
 
   <div class="tabs">
-    <div class="tab active" onclick="switchTab(this,'INBOX')">Inbox <span id="inboxCount" style="font-size:11px;opacity:.7"></span></div>
+    <div class="tab active" onclick="switchTab(this,'INBOX')">Inbox</div>
     <div class="tab" onclick="switchTab(this,'STARRED')">⭐ Bintang</div>
     <div class="tab" onclick="switchTab(this,'SENT')">Terkirim</div>
     <div class="tab" onclick="switchTab(this,'TRASH')">🗑️ Sampah</div>
   </div>
 
-  <div class="mail-list" id="mailList">
-    <div class="loading-skeleton" id="loadingSkel">
-      <div class="skel-item"><div class="skel-avatar"></div><div class="skel-body"><div class="skel-line w60"></div><div class="skel-line w80"></div><div class="skel-line w40"></div></div></div>
-    </div>
-  </div>
-
-  <button class="fab" onclick="openCompose()">
-    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-  </button>
+  <div class="mail-list" id="mailList"></div>
 
   <div class="bottom-nav">
     <div class="nav-item active" onclick="switchTab(document.querySelector('.tab'),'INBOX');setNav(this)">
       <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       <span class="nav-label">Inbox</span>
-      <div class="nav-badge" id="navBadge" style="display:none"></div>
     </div>
-    <div class="nav-item" onclick="setNav(this);showToast('Gunakan tab atas')">
-      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      <span class="nav-label">Bintang</span>
+    <div class="nav-item" onclick="handleLogout();setNav(this)">
+      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      <span class="nav-label">Logout</span>
     </div>
-    <div class="nav-item" onclick="openCompose();setNav(this)">
-      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-      <span class="nav-label">Tulis</span>
-    </div>
-    <div class="nav-item" onclick="openProfile();setNav(this)">
-      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <span class="nav-label">Profil</span>
-    </div>
-  </div>
-</div>
-
-<div class="sheet-overlay hidden" id="profileModal" onclick="if(event.target===this)this.classList.add('hidden')">
-  <div class="sheet-box" style="text-align:center">
-    <div class="sheet-handle"></div>
-    <div style="margin-bottom:24px">
-      <div id="pmAvatar" style="width:72px;height:72px;border-radius:50%;background:var(--surface2);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;font-weight:700;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.1)"></div>
-      <div id="pmName" style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px">User</div>
-      <div id="pmEmail" style="font-size:14px;color:var(--text3)">email@gmail.com</div>
-    </div>
-    <button class="sheet-btn" style="background:var(--surface2);color:var(--text);margin-bottom:12px;border:1.5px solid var(--border)" onclick="triggerAccountSwitch()">
-      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:8px"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-      Ganti Akun Google
-    </button>
-    <button class="sheet-btn" style="background:#FEF2F2;color:#DC2626" onclick="handleLogout()">Keluar (Logout)</button>
-  </div>
-</div>
-
-<div class="sheet-overlay hidden" id="composeOverlay" onclick="if(event.target===this)document.getElementById('composeOverlay').classList.add('hidden');document.body.style.overflow=''">
-  <div class="sheet-box">
-    <div class="sheet-handle"></div>
-    <div class="compose-header">
-      <span class="compose-title">Pesan Baru</span>
-      <button class="compose-close" onclick="document.getElementById('composeOverlay').classList.add('hidden');document.body.style.overflow=''"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    </div>
-    <div class="compose-field"><span class="compose-label">Ke</span><input class="compose-input" id="composeTo" type="email" placeholder="penerima@email.com"></div>
-    <div class="compose-field"><span class="compose-label">Judul</span><input class="compose-input" id="composeSubject" type="text" placeholder="Subjek…"></div>
-    <textarea class="compose-body-input" id="composeBody" placeholder="Ketik pesan elegan Anda…"></textarea>
-    <button class="sheet-btn" style="background:var(--text);color:#fff;box-shadow:0 4px 16px rgba(0,0,0,.2)" id="composeSendBtn" onclick="sendEmail()">Kirim Pesan</button>
   </div>
 </div>
 
@@ -261,24 +158,19 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
     <span class="detail-title-bar" id="detailTitleBar">Email</span>
     <div class="detail-action-btns">
       <button class="detail-action-btn" id="btnStar" onclick="toggleStarCurrent()"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
-      <button class="detail-action-btn" onclick="archiveCurrent()"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg></button>
       <button class="detail-action-btn" onclick="trashCurrent()"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button>
     </div>
   </div>
   <div class="detail-body" id="detailBody"></div>
-  <div class="reply-bar">
-    <input class="reply-input" id="replyInput" type="text" placeholder="Balas email…">
-    <button class="reply-send" id="replySendBtn" onclick="sendReply()"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-  </div>
 </div>
 
 <div class="modal-overlay hidden" id="confirmModal">
   <div class="modal-box">
-    <div style="font-size:17px;font-weight:700;margin-bottom:8px" id="modalTitle">Konfirmasi</div>
-    <div style="font-size:14px;color:var(--text2);margin-bottom:20px" id="modalText">Yakin?</div>
+    <div style="font-size:17px;font-weight:700;margin-bottom:8px" id="modalTitle">Keluar?</div>
+    <div style="font-size:14px;color:var(--text2);margin-bottom:20px" id="modalText">Semua sesi akun akan dihapus dari memori.</div>
     <div style="display:flex;gap:10px">
       <button style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--surface2);font-weight:600;font-family:inherit" onclick="document.getElementById('confirmModal').classList.add('hidden')">Batal</button>
-      <button style="flex:1;padding:12px;border-radius:12px;border:none;background:#EF4444;color:#fff;font-weight:600;font-family:inherit" id="modalConfirmBtn">Ya</button>
+      <button style="flex:1;padding:12px;border-radius:12px;border:none;background:#EF4444;color:#fff;font-weight:600;font-family:inherit" id="modalConfirmBtn">Ya, Keluar</button>
     </div>
   </div>
 </div>
@@ -292,91 +184,158 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 const CLIENT_ID = '150908117503-5bj62qlgafq2snd2boamiinq16adt4mp.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
 
-let accessToken = null;
-let currentMessages = [];
-let currentMsgId = null;
+// DATABASE LOCAL STORAGE
+let sessions = JSON.parse(localStorage.getItem('mail_sessions') || '{}');
+let activeEmail = localStorage.getItem('mail_active_email');
 let currentLabel = 'INBOX';
-let userInfo = null;
+let currentMsgId = null;
+
+// AUTO LOGIN PAS HALAMAN DIBUKA
+window.addEventListener('DOMContentLoaded', () => {
+  if (activeEmail && sessions[activeEmail]) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'flex';
+    renderTopAvatars();
+    fetchMessages('INBOX');
+  }
+});
 
 // ─────────────────────────────────────────────
-//  AUTH & MULTI-ACCOUNT SWITCHER
+//  MULTI-ACCOUNT ENGINE & REFRESH TOKEN
 // ─────────────────────────────────────────────
-function initGoogleClient(forceAccountSelect = false) {
-  return google.accounts.oauth2.initTokenClient({
+function handleLogin() {
+  const client = google.accounts.oauth2.initCodeClient({
     client_id: CLIENT_ID,
     scope: SCOPES,
-    prompt: forceAccountSelect ? 'select_account' : '', // INI KUNCI BUAT GANTI AKUN
-    callback: async (resp) => {
-      if (resp.error) return;
-      accessToken = resp.access_token;
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('mainApp').style.display = 'flex';
-      await fetchUserInfo();
-      fetchMessages('INBOX');
+    ux_mode: 'popup',
+    callback: async (response) => {
+      if (response.error) return showToast('Login dibatalkan.');
+      
+      showToast('Membuat sesi eksklusif abadi...');
+      try {
+        // Tembak API Vercel Serverless kita
+        const tokenReply = await fetch('/api/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: response.code })
+        }).then(r => r.json());
+
+        if (!tokenReply.access_token) throw new Error('Gagal dapat token');
+
+        const token = tokenReply.access_token;
+        const refreshToken = tokenReply.refresh_token;
+
+        // Ambil info profil
+        const userInfo = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        }).then(r => r.json());
+        
+        // Simpan ke Local Storage (Termasuk Refresh Token)
+        sessions[userInfo.email] = {
+          email: userInfo.email,
+          name: userInfo.name,
+          picture: userInfo.picture,
+          token: token,
+          refresh_token: refreshToken || sessions[userInfo.email]?.refresh_token
+        };
+        localStorage.setItem('mail_sessions', JSON.stringify(sessions));
+        
+        switchAccount(userInfo.email);
+      } catch(e) { 
+        console.error(e);
+        showToast('Gagal merakit sesi.'); 
+      }
     }
   });
+  client.requestCode();
 }
 
-function handleLogin() {
-  initGoogleClient(false).requestAccessToken();
+function switchAccount(email) {
+  activeEmail = email;
+  localStorage.setItem('mail_active_email', activeEmail);
+  
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'flex';
+  
+  renderTopAvatars();
+  fetchMessages('INBOX');
 }
 
-function triggerAccountSwitch() {
-  document.getElementById('profileModal').classList.add('hidden'); // Tutup modal profil
-  showToast('Memuat daftar akun...');
-  initGoogleClient(true).requestAccessToken(); // Panggil popup Google minta pilih akun
+function renderTopAvatars() {
+  const container = document.getElementById('accountList');
+  container.innerHTML = '';
+  
+  Object.values(sessions).forEach(acc => {
+    const div = document.createElement('div');
+    div.className = `avatar-btn ${acc.email === activeEmail ? 'active-acc' : ''}`;
+    div.title = acc.email;
+    div.onclick = () => { if(acc.email !== activeEmail) switchAccount(acc.email); };
+    
+    if (acc.picture) {
+      div.innerHTML = `<img src="${acc.picture}" alt="Profile">`;
+    } else {
+      div.textContent = (acc.name || acc.email || '?')[0].toUpperCase();
+      div.style.background = colorFor(acc.name);
+    }
+    container.appendChild(div);
+  });
+  
+  const addBtn = document.createElement('div');
+  addBtn.className = 'avatar-btn add-btn';
+  addBtn.innerHTML = '+';
+  addBtn.onclick = handleLogin;
+  container.appendChild(addBtn);
 }
 
 function handleLogout() {
-  document.getElementById('profileModal').classList.add('hidden');
-  document.getElementById('modalTitle').textContent = 'Keluar?';
-  document.getElementById('modalText').textContent = 'Sesi Anda akan diakhiri.';
-  document.getElementById('modalConfirmBtn').onclick = () => {
-    document.getElementById('confirmModal').classList.add('hidden');
-    google.accounts.oauth2.revoke(accessToken, () => {});
-    accessToken = null; userInfo = null;
-    document.getElementById('mainApp').style.display = 'none';
-    document.getElementById('loginScreen').style.display = 'flex';
-  };
   document.getElementById('confirmModal').classList.remove('hidden');
-}
-
-async function fetchUserInfo() {
-  const r = await gFetch('https://www.googleapis.com/oauth2/v2/userinfo');
-  userInfo = r;
-  
-  // Update Avatar Utama
-  const av = document.getElementById('userAvatar');
-  if (r.picture) av.innerHTML = `<img src="${r.picture}" alt="avatar">`;
-  else av.textContent = (r.name || r.email || '?')[0].toUpperCase();
-}
-
-function openProfile() {
-  const pAv = document.getElementById('pmAvatar');
-  if (userInfo?.picture) {
-    pAv.innerHTML = `<img src="${userInfo.picture}" style="width:100%;height:100%;object-fit:cover">`;
-    pAv.style.background = 'transparent';
-  } else {
-    pAv.textContent = (userInfo?.name || userInfo?.email || '?')[0].toUpperCase();
-    pAv.style.background = colorFor(userInfo?.name || '');
-  }
-  document.getElementById('pmName').textContent = userInfo?.name || 'Executive User';
-  document.getElementById('pmEmail').textContent = userInfo?.email || '';
-  document.getElementById('profileModal').classList.remove('hidden');
+  document.getElementById('modalConfirmBtn').onclick = () => {
+    localStorage.removeItem('mail_sessions');
+    localStorage.removeItem('mail_active_email');
+    location.reload();
+  };
 }
 
 // ─────────────────────────────────────────────
-//  GMAIL API helpers
+//  GMAIL API (WITH AUTO REFRESH)
 // ─────────────────────────────────────────────
 async function gFetch(url, opts = {}) {
-  const res = await fetch(url, { ...opts, headers: { 'Authorization': 'Bearer ' + accessToken, 'Content-Type': 'application/json', ...(opts.headers || {}) }});
-  if (!res.ok) throw new Error('API error ' + res.status);
+  let token = sessions[activeEmail].token;
+  let res = await fetch(url, { ...opts, headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json', ...(opts.headers || {}) }});
+  
+  // Kalau token kedaluwarsa, panggil Vercel API buat dapet nyawa baru
+  if (res.status === 401 && sessions[activeEmail].refresh_token) {
+    showToast('Memperbarui akses rahasia...');
+    
+    try {
+      const refRes = await fetch('/api/token', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ refresh_token: sessions[activeEmail].refresh_token })
+      }).then(r => r.json());
+
+      if (refRes.access_token) {
+        // Dapet token baru, simpan & tembak API Gmail ulang
+        sessions[activeEmail].token = refRes.access_token;
+        localStorage.setItem('mail_sessions', JSON.stringify(sessions));
+        
+        res = await fetch(url, { ...opts, headers: { 'Authorization': 'Bearer ' + refRes.access_token, 'Content-Type': 'application/json', ...(opts.headers || {}) }});
+      } else {
+        throw new Error('Refresh Hangus');
+      }
+    } catch(e) {
+      handleLogout();
+      throw new Error('Sesi Mati Total');
+    }
+  } else if (res.status === 401) {
+    handleLogout();
+    throw new Error('Sesi Mati Total');
+  }
+  
+  if (!res.ok) throw new Error('API error');
   return res.json();
 }
 
-// ─────────────────────────────────────────────
-//  FETCH MESSAGES (SUDAH DI-FIX URL-NYA)
-// ─────────────────────────────────────────────
 async function fetchMessages(label) {
   currentLabel = label;
   const listEl = document.getElementById('mailList');
@@ -388,64 +347,41 @@ async function fetchMessages(label) {
     const list = data.messages || [];
 
     if (list.length === 0) {
-      listEl.innerHTML = `<div class="empty-state"><p>📭 Tidak ada email</p><span>Ruang kerja Anda bersih.</span></div>`;
-      return;
+      listEl.innerHTML = `<div class="empty-state"><p>📭 Kosong</p></div>`; return;
     }
 
-    // URL SUDAH DIPERBAIKI DISINI BIAR SUBJECT & NAMA MUNCUL:
     const msgs = await Promise.all(list.map(m =>
       gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date&metadataHeaders=To`)
     ));
-    currentMessages = msgs;
     renderMessages(msgs);
-    
-    // Update Badge (Unread)
-    const unread = msgs.filter(m => m.labelIds && m.labelIds.includes('UNREAD')).length;
-    document.getElementById('navBadge').style.display = (unread > 0 && label === 'INBOX') ? 'flex' : 'none';
-    document.getElementById('navBadge').textContent = unread > 99 ? '99+' : unread;
-    document.getElementById('inboxCount').textContent = (unread > 0 && label === 'INBOX') ? `(${unread})` : '';
-  } catch (e) { listEl.innerHTML = `<div class="empty-state"><p>⚠️ Koneksi Terputus</p><span>${e.message}</span></div>`; }
+  } catch (e) { 
+    if(e.message !== 'Sesi Mati Total') listEl.innerHTML = `<div class="empty-state"><p>⚠️ Gagal muat</p></div>`; 
+  }
 }
 
-// ─────────────────────────────────────────────
-//  RENDER UI
-// ─────────────────────────────────────────────
 const COLORS = ['#667EEA','#F093FB','#4FACFE','#43E97B','#FA709A','#F7971E','#30CFD0','#A18CD1','#FE9A58','#38F9D7'];
 function colorFor(str) { let h=0; for(let c of (str||'')) h=(h*31+c.charCodeAt(0))%COLORS.length; return COLORS[h]; }
 function initials(name) { return (name||'?').replace(/[^a-zA-Z]/g,'').slice(0,2).toUpperCase(); }
 function getHeader(msg, name) { return (msg.payload?.headers || []).find(x => x.name.toLowerCase() === name.toLowerCase())?.value || ''; }
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function showToast(m) { const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
 
 function renderMessages(msgs) {
-  const list = document.getElementById('mailList');
-  list.innerHTML = '';
+  const list = document.getElementById('mailList'); list.innerHTML = '';
   msgs.forEach((msg, i) => {
-    const from = getHeader(msg, 'From');
-    const subject = getHeader(msg, 'Subject') || '(Tanpa subjek)';
-    const date = getHeader(msg, 'Date');
+    const from = getHeader(msg, 'From'), subject = getHeader(msg, 'Subject') || '(Tanpa subjek)', date = getHeader(msg, 'Date');
     const isUnread = msg.labelIds?.includes('UNREAD');
-    const isStarred = msg.labelIds?.includes('STARRED');
+    let fromName = from.split('<')[0].replace(/"/g, '').trim() || from.split('@')[0];
     
-    // Parsing nama biar bersih
-    let fromName = from.split('<')[0].replace(/"/g, '').trim();
-    if (!fromName) fromName = from.split('@')[0];
-    const color = colorFor(fromName);
-    
-    const labels = (msg.labelIds || []).filter(l => ['IMPORTANT','STARRED','CATEGORY_PROMOTIONS','CATEGORY_SOCIAL','CATEGORY_UPDATES'].includes(l));
-
     const div = document.createElement('div');
     div.className = 'mail-item' + (isUnread ? ' unread' : '');
     div.style.animationDelay = (i * 0.03) + 's';
     div.innerHTML = `
-      <div class="mail-avatar" style="background:linear-gradient(135deg, ${color}, #222)">${initials(fromName)}</div>
+      <div class="mail-avatar" style="background:linear-gradient(135deg, ${colorFor(fromName)}, #222)">${initials(fromName)}</div>
       <div class="mail-body">
-        <div class="mail-header"><span class="mail-from">${escHtml(fromName)}</span><span class="mail-time">${formatDate(date)}</span></div>
+        <div class="mail-header"><span class="mail-from">${escHtml(fromName)}</span></div>
         <div class="mail-subject">${escHtml(subject)}</div>
         <div class="mail-preview">${escHtml(msg.snippet || '')}</div>
-        ${labels.length ? `<div class="mail-footer"><div class="mail-labels">${labels.map(l=>`<span class="mail-label lbl-${l}">${l.replace('CATEGORY_','')}</span>`).join('')}</div></div>` : ''}
-      </div>
-      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
-        <button class="icon-btn${isStarred?' starred':''}" onclick="toggleStarMsg(event,'${msg.id}',this)">${starSVG(isStarred)}</button>
-        <button class="icon-btn" onclick="trashMsg(event,'${msg.id}',this)">${trashSVG()}</button>
       </div>
     `;
     div.addEventListener('click', () => openDetail(msg.id));
@@ -453,40 +389,23 @@ function renderMessages(msgs) {
   });
 }
 
-function formatDate(ds) {
-  if (!ds) return '';
-  const d = new Date(ds), now = new Date(), diff = now - d;
-  if (diff < 86400000 && d.getDate() === now.getDate()) return d.toLocaleTimeString('id-ID', {hour:'2-digit',minute:'2-digit'});
-  if (diff < 172800000) return 'Kemarin';
-  return d.toLocaleDateString('id-ID', {day:'numeric',month:'short'});
-}
-
-// ─────────────────────────────────────────────
-//  DETAIL & ACTIONS
-// ─────────────────────────────────────────────
 async function openDetail(msgId) {
   currentMsgId = msgId;
   document.getElementById('detailView').classList.remove('hidden');
   document.getElementById('detailBody').innerHTML = '<div style="padding:40px;text-align:center;color:var(--text3)">Mengambil data…</div>';
   try {
     const msg = await gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msgId}?format=full`);
-    const from = getHeader(msg, 'From'), subject = getHeader(msg, 'Subject') || '(Tanpa subjek)', to = getHeader(msg, 'To');
-    const fromName = from.split('<')[0].replace(/"/g, '').trim() || from;
+    const from = getHeader(msg, 'From'), subject = getHeader(msg, 'Subject') || '(Tanpa subjek)';
     document.getElementById('detailTitleBar').textContent = subject;
-    document.getElementById('btnStar').className = 'detail-action-btn' + (msg.labelIds?.includes('STARRED') ? ' active-action' : '');
-    if (msg.labelIds?.includes('UNREAD')) await gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msgId}/modify`, {method:'POST', body:JSON.stringify({removeLabelIds:['UNREAD']})});
-    
     document.getElementById('detailBody').innerHTML = `
       <div class="detail-subject">${escHtml(subject)}</div>
       <div class="detail-meta">
-        <div class="detail-meta-avatar" style="background:linear-gradient(135deg, ${colorFor(fromName)}, #222)">${initials(fromName)}</div>
-        <div class="detail-meta-info">
-          <div class="detail-meta-from">${escHtml(fromName)}</div><div class="detail-meta-to">Ke: ${escHtml(to)}</div>
-        </div>
+        <div class="detail-meta-from" style="font-weight:bold;margin-bottom:10px">${escHtml(from)}</div>
       </div>
       <div class="detail-content">${extractBody(msg.payload)}</div>`;
-    document.getElementById('replyInput').dataset.to = from; document.getElementById('replyInput').dataset.subject = 'Re: ' + subject;
-  } catch(e) { document.getElementById('detailBody').innerHTML = 'Gagal memuat.'; }
+  } catch(e) { 
+    if(e.message !== 'Sesi Mati Total') document.getElementById('detailBody').innerHTML = 'Gagal memuat.'; 
+  }
 }
 
 function extractBody(payload) {
@@ -501,27 +420,9 @@ function extractBody(payload) {
 }
 function findPart(p, t) { return p.mimeType === t && p.body?.data ? p.body.data : (p.parts||[]).reduce((a,c) => a || findPart(c,t), null); }
 
-function closeDetail() { document.getElementById('detailView').classList.add('hidden'); fetchMessages(currentLabel); }
-
-// Fitur Tulis / Kirim
-function openCompose() { document.getElementById('composeOverlay').classList.remove('hidden'); document.body.style.overflow='hidden'; }
-async function sendEmail() {
-  const to = document.getElementById('composeTo').value, subj = document.getElementById('composeSubject').value, bdy = document.getElementById('composeBody').value;
-  if(!to || !bdy) return showToast('Lengkapi data');
-  const raw = btoa(unescape(encodeURIComponent(`To: ${to}\r\nSubject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(subj)))}?=\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n${bdy}`))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-  await gFetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {method:'POST', body:JSON.stringify({raw})});
-  showToast('Terkirim!'); document.getElementById('composeOverlay').classList.add('hidden');
-}
-
-// Helpers
+function closeDetail() { document.getElementById('detailView').classList.add('hidden'); }
 function switchTab(el, lbl) { document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); if(el)el.classList.add('active'); fetchMessages(lbl); }
 function setNav(el) { document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); }
-function showToast(m) { const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
-function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function starSVG(f) { return f ? `<svg width="16" height="16" fill="#FBBF24" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>` : `<svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`; }
-function trashSVG() { return `<svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>`; }
-async function trashMsg(e, id) { e.stopPropagation(); await gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/trash`,{method:'POST'}); fetchMessages(currentLabel); }
-async function toggleStarMsg(e, id, btn) { e.stopPropagation(); const s = btn.classList.contains('starred'); btn.classList.toggle('starred'); btn.innerHTML=starSVG(!s); await gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}/modify`,{method:'POST',body:JSON.stringify(s?{removeLabelIds:['STARRED']}:{addLabelIds:['STARRED']})}); }
 </script>
 </body>
 </html>
