@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#000000" id="themeColor">
+<meta name="theme-color" content="#D4522A" id="themeColor">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Mail Bespoke">
@@ -20,8 +20,9 @@
   --accent:#D4522A;--accent2:#E8734A;--accent-soft:#FEF2EE;--accent-glow:rgba(212,82,42,.15);
   --text:#1A1714;--text2:#6B6560;--text3:#A09990;
   --border:#E3E0DA;--shadow:0 2px 16px rgba(0,0,0,.07);--shadow-lg:0 8px 40px rgba(0,0,0,.12);
-  --radius:16px;--tab-h:64px;--sidebar-w:300px;
-  --green:#22C55E;--blue:#3B82F6;--purple:#8B5CF6;--yellow:#EAB308;--red:#EF4444;
+  --radius:16px;--radius-sm:10px;--radius-lg:24px;
+  --tab-h:64px;--sidebar-w:300px;--header-h:60px;
+  --green:#22C55E;--blue:#3B82F6;--purple:#8B5CF6;--yellow:#EAB308;--red:#EF4444;--cyan:#06B6D4;--pink:#EC4899;--orange:#F97316;
   --transition:cubic-bezier(.4,0,.2,1);
   --glass:rgba(253,252,250,.85);--glass-border:rgba(255,255,255,.5);
   --toggle-bg:#E3E0DA;--toggle-thumb:#fff;--toggle-glow:rgba(234,179,8,0);
@@ -41,110 +42,151 @@
 }
 
 html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overscroll-behavior:none;-webkit-font-smoothing:antialiased;transition:background .4s var(--transition),color .4s var(--transition)}
+
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
 .app{display:flex;flex-direction:column;height:100dvh;max-width:430px;margin:0 auto;position:relative;background:var(--bg);overflow:hidden}
 
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px var(--accent-glow)}50%{box-shadow:0 0 40px var(--accent-glow)}}
 @keyframes float{0%,100%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(2%,2%) rotate(5deg)}}
 @keyframes sunRise{from{transform:rotate(-90deg) scale(0);opacity:0}to{transform:rotate(0deg) scale(1);opacity:1}}
 @keyframes moonRise{from{transform:rotate(90deg) scale(0);opacity:0}to{transform:rotate(0deg) scale(1);opacity:1}}
 @keyframes starTwinkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:1;transform:scale(1)}}
+@keyframes ripple{0%{transform:scale(0);opacity:.6}100%{transform:scale(2.5);opacity:0}}
 
-/* DARK MODE TOGGLE */
+/* ─── ELEGANT DARK MODE TOGGLE ─── */
 .dm-toggle-wrap{position:relative;display:flex;align-items:center}
-.dm-toggle{position:relative;width:64px;height:32px;background:var(--toggle-bg);border-radius:16px;cursor:pointer;border:none;padding:0;transition:background .4s var(--transition);flex-shrink:0;-webkit-tap-highlight-color:transparent;}
-.dm-toggle .thumb{position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#FFF9E6,#FFD580);box-shadow:0 2px 8px rgba(0,0,0,.2);transition:transform .4s var(--transition),background .4s var(--transition);display:flex;align-items:center;justify-content:center;}
-[data-theme="dark"] .dm-toggle .thumb{transform:translateX(32px);background:linear-gradient(135deg,#312e81,#4f46e5);}
-.dm-toggle .icon-sun{width:14px;height:14px;color:#D97706;animation:sunRise .35s var(--transition);display:block;}
+.dm-toggle{position:relative;width:64px;height:32px;background:var(--toggle-bg);border-radius:16px;cursor:pointer;border:none;padding:0;transition:background .4s var(--transition),box-shadow .4s var(--transition);flex-shrink:0;overflow:visible;-webkit-tap-highlight-color:transparent;}
+.dm-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.dm-toggle .thumb{position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#FFF9E6,#FFD580);box-shadow:0 2px 8px rgba(0,0,0,.2);transition:transform .4s cubic-bezier(.34,1.56,.64,1),background .4s var(--transition),box-shadow .4s var(--transition);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+[data-theme="dark"] .dm-toggle .thumb{transform:translateX(32px);background:linear-gradient(135deg,#312e81,#4f46e5);box-shadow:0 2px 12px rgba(79,70,229,.5),0 0 20px rgba(139,92,246,.3);}
+.dm-toggle::after{content:'';position:absolute;top:50%;left:50%;width:32px;height:32px;border-radius:50%;background:var(--accent);transform:translate(-50%,-50%) scale(0);opacity:0;pointer-events:none;}
+.dm-toggle.rippling::after{animation:ripple .4s ease forwards}
+.dm-toggle .icon-sun{width:14px;height:14px;color:#D97706;animation:sunRise .35s cubic-bezier(.34,1.56,.64,1);display:block;}
 [data-theme="dark"] .dm-toggle .icon-sun{display:none}
-.dm-toggle .icon-moon{width:13px;height:13px;color:#A5B4FC;animation:moonRise .35s var(--transition);display:none;}
+.dm-toggle .icon-moon{width:13px;height:13px;color:#A5B4FC;animation:moonRise .35s cubic-bezier(.34,1.56,.64,1);display:none;}
 [data-theme="dark"] .dm-toggle .icon-moon{display:block}
 .dm-toggle .star1,.dm-toggle .star2,.dm-toggle .star3{position:absolute;border-radius:50%;background:#A5B4FC;opacity:0;transition:opacity .3s;}
-[data-theme="dark"] .dm-toggle .star1{width:3px;height:3px;top:8px;left:12px;animation:starTwinkle 1.5s .2s infinite;opacity:1}
-[data-theme="dark"] .dm-toggle .star2{width:2px;height:2px;top:14px;left:20px;animation:starTwinkle 1.5s .5s infinite;opacity:1}
-[data-theme="dark"] .dm-toggle .star3{width:2px;height:2px;top:8px;left:24px;animation:starTwinkle 1.5s .8s infinite;opacity:1}
-.dm-toggle .cloud{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;gap:2px;align-items:center;transition:opacity .3s;}
+[data-theme="dark"] .dm-toggle .star1{width:3px;height:3px;top:8px;left:12px;animation:starTwinkle 1.5s .2s ease-in-out infinite;opacity:1}
+[data-theme="dark"] .dm-toggle .star2{width:2px;height:2px;top:14px;left:20px;animation:starTwinkle 1.5s .5s ease-in-out infinite;opacity:1}
+[data-theme="dark"] .dm-toggle .star3{width:2px;height:2px;top:8px;left:24px;animation:starTwinkle 1.5s .8s ease-in-out infinite;opacity:1}
+.dm-toggle .cloud{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;gap:2px;align-items:center;opacity:1;transition:opacity .3s;}
 [data-theme="dark"] .dm-toggle .cloud{opacity:0}
 .dm-toggle .cloud span{background:#C4B5A5;border-radius:50%;display:block}
 .dm-toggle .cloud span:nth-child(1){width:5px;height:5px}
 .dm-toggle .cloud span:nth-child(2){width:7px;height:7px;margin-top:-3px}
 .dm-toggle .cloud span:nth-child(3){width:5px;height:5px}
-[data-theme="dark"] .dm-toggle{background:rgba(79,70,229,.25);box-shadow:inset 0 0 20px rgba(79,70,229,.15);}
+[data-theme="dark"] .dm-toggle{background:rgba(79,70,229,.25);box-shadow:0 0 0 1px rgba(139,92,246,.3),inset 0 0 20px rgba(79,70,229,.15);}
 
-/* LOGIN SCREEN */
+/* ─── Login Screen ─── */
 #loginScreen{position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;text-align:center}
-.login-bg::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 30%,var(--accent-glow) 0%,transparent 50%);animation:float 20s infinite}
-.login-logo{width:80px;height:80px;border-radius:24px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;margin:0 auto 28px;box-shadow:0 12px 40px rgba(212,82,42,.4);position:relative;z-index:2}
-.login-title{font-family:'DM Serif Display',serif;font-size:36px;margin-bottom:10px;position:relative;z-index:2}
-.login-sub{font-size:15px;color:var(--text3);line-height:1.7;margin-bottom:44px;position:relative;z-index:2}
-.login-btn{display:flex;align-items:center;gap:12px;background:var(--surface);border:2px solid var(--border);border-radius:50px;padding:16px 32px;font-size:15px;font-weight:600;font-family:inherit;color:var(--text);cursor:pointer;box-shadow:var(--shadow);transition:all .3s;position:relative;z-index:2}
-.login-btn:active{transform:scale(.97);}
+.login-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.login-bg::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 30%,var(--accent-glow) 0%,transparent 50%),radial-gradient(circle at 70% 70%,var(--toggle-glow) 0%,transparent 50%);animation:float 20s ease-in-out infinite}
+.login-content{position:relative;z-index:1}
+.login-logo{width:80px;height:80px;border-radius:24px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;margin:0 auto 28px;box-shadow:0 12px 40px rgba(212,82,42,.4);animation:glow 3s ease-in-out infinite}
+.login-title{font-family:'DM Serif Display',serif;font-size:36px;margin-bottom:10px;color:var(--text);letter-spacing:-.5px}
+.login-sub{font-size:15px;color:var(--text3);line-height:1.7;margin-bottom:44px;max-width:300px}
+.login-btn{display:flex;align-items:center;gap:12px;background:var(--surface);border:2px solid var(--border);border-radius:50px;padding:16px 32px;font-size:15px;font-weight:600;font-family:inherit;color:var(--text);cursor:pointer;box-shadow:var(--shadow);transition:all .3s var(--transition);-webkit-tap-highlight-color:transparent}
+.login-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.login-btn:active{transform:scale(.97);box-shadow:none}
+.login-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
 
-/* PWA PROMPT */
-.pwa-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:199;opacity:0;pointer-events:none;transition:opacity .3s}
+/* ─── PWA Prompt ─── */
+.pwa-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;opacity:0;pointer-events:none;transition:opacity .3s}
 .pwa-overlay.show{opacity:1;pointer-events:auto}
-.pwa-prompt{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;background:var(--surface);border-radius:24px 24px 0 0;padding:24px;z-index:200;transition:transform .4s var(--transition)}
+.pwa-prompt{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;background:var(--surface);border-radius:24px 24px 0 0;padding:24px;padding-bottom:40px;z-index:200;box-shadow:0 -8px 40px rgba(0,0,0,.15);transition:transform .4s var(--transition)}
 .pwa-prompt.show{transform:translateX(-50%) translateY(0)}
-.pwa-btn{flex:1;padding:14px;border-radius:14px;font-weight:600;border:none;cursor:pointer;}
-.pwa-btn.primary{background:var(--accent);color:#fff;}
-.pwa-btn.secondary{background:var(--surface2);color:var(--text);}
+.pwa-prompt-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
+.pwa-btn{flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s;border:none}
+.pwa-btn.secondary{background:var(--surface2);color:var(--text)}
+.pwa-btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 16px rgba(212,82,42,.3)}
+.pwa-btn:active{transform:scale(.97)}
 
-/* SIDEBAR & UI ELEMENTS */
-.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;opacity:0;pointer-events:none;transition:opacity .3s}
+/* ─── Sidebar ─── */
+.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:40;opacity:0;pointer-events:none;transition:opacity .3s}
 .sidebar-overlay.show{opacity:1;pointer-events:auto}
 .sidebar{position:fixed;left:50%;margin-left:-215px;top:0;bottom:0;width:var(--sidebar-w);background:var(--surface);z-index:45;transform:translateX(-100%);transition:transform .35s var(--transition);display:flex;flex-direction:column;box-shadow:4px 0 30px rgba(0,0,0,.15)}
 .sidebar.open{transform:translateX(0)}
 @media(min-width:431px){.sidebar{margin-left:calc(-215px)}}
-.sidebar-header{padding:20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border)}
-.sidebar-logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;}
+.sidebar-header{padding:20px 20px 16px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border)}
+.sidebar-logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(212,82,42,.3)}
+.sidebar-brand{flex:1}
 .sidebar-brand h1{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:2px}
-.sidebar-compose{padding:16px}
-.compose-sidebar-btn{width:100%;padding:14px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:600;border:none;cursor:pointer;}
+.sidebar-brand span{font-size:11px;color:var(--text3);font-weight:500}
+.sidebar-compose{padding:16px 16px 8px}
+.compose-sidebar-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 20px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:14px;font-weight:600;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(212,82,42,.35);transition:all .2s}
+.compose-sidebar-btn:active{transform:scale(.97);box-shadow:0 2px 8px rgba(212,82,42,.3)}
 .sidebar-nav{flex:1;overflow-y:auto;padding:8px 0}
 .nav-section{padding:8px 12px}
-.nav-section-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:6px;padding-left:14px}
-.nav-link{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:0 50px 50px 0;margin-right:12px;font-size:14px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .2s;}
+.nav-section-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;padding-left:14px}
+.nav-link{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:0 50px 50px 0;margin-right:12px;font-size:14px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .2s;position:relative}
+.nav-link:hover{background:var(--surface2);color:var(--text)}
 .nav-link.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.nav-link.active svg{stroke:var(--accent)}
+.nav-link svg{flex-shrink:0;transition:stroke .2s}
+.nav-link .badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;min-width:20px;text-align:center}
 .nav-divider{height:1px;background:var(--border);margin:8px 16px}
 .sidebar-footer{padding:12px;border-top:1px solid var(--border)}
-.sidebar-account{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;background:var(--surface2);cursor:pointer;}
-.sidebar-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;overflow:hidden;}
+.sidebar-account{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;background:var(--surface2);cursor:pointer;transition:background .2s}
+.sidebar-account:hover{background:var(--surface3)}
+.sidebar-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;overflow:hidden;flex-shrink:0}
 .sidebar-avatar img{width:100%;height:100%;object-fit:cover}
+.sidebar-account-info{flex:1;min-width:0}
+.sidebar-account-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-account-email{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* TOPBAR & TABS */
-.topbar{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--glass);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);z-index:10;position:sticky;top:0}
-.menu-btn{background:none;border:none;cursor:pointer;color:var(--text);padding:8px;border-radius:50%;}
-.topbar-search{flex:1;display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:10px 14px;cursor:pointer;}
+/* ─── Top Bar ─── */
+.topbar{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);z-index:10;position:sticky;top:0}
+.menu-btn{background:none;border:none;cursor:pointer;color:var(--text);padding:8px;border-radius:50%;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.menu-btn:active{background:var(--surface2);transform:scale(.9)}
+.topbar-search{flex:1;display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:10px 14px;cursor:pointer;transition:all .2s}
+.topbar-search:active{background:var(--surface2)}
 .topbar-search span{font-size:13px;color:var(--text3);flex:1}
 .account-switcher{display:flex;align-items:center;gap:4px}
-.avatar-btn{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;cursor:pointer;border:2px solid var(--surface);overflow:hidden;}
+.avatar-btn{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);overflow:hidden;border:2px solid var(--surface);transition:all .25s var(--transition)}
 .avatar-btn img{width:100%;height:100%;object-fit:cover}
-.avatar-btn.active-acc{border-color:var(--accent);transform:scale(1.1);}
-.avatar-btn.add-btn{background:var(--surface);color:var(--text2);border:2px dashed var(--border);}
+.avatar-btn.active-acc{border-color:var(--accent);transform:scale(1.1);box-shadow:0 4px 16px rgba(212,82,42,.35)}
+.avatar-btn.add-btn{background:var(--surface);color:var(--text2);border:2px dashed var(--border);box-shadow:none}
+
+/* ─── Category Tabs ─── */
 .category-tabs{display:flex;gap:6px;padding:6px 14px 14px;overflow-x:auto;scrollbar-width:none}
 .category-tabs::-webkit-scrollbar{display:none}
-.cat-tab{padding:9px 14px;border-radius:12px;font-size:12px;font-weight:600;white-space:nowrap;cursor:pointer;background:var(--surface);color:var(--text2);border:1.5px solid var(--border);transition:all .25s;}
-.cat-tab.active{color:#fff;border-color:transparent;}
+.cat-tab{display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:12px;font-size:12px;font-weight:600;white-space:nowrap;cursor:pointer;background:var(--surface);color:var(--text2);border:1.5px solid var(--border);transition:all .25s var(--transition);user-select:none;-webkit-tap-highlight-color:transparent}
+.cat-tab:active{transform:scale(.95)}
+.cat-tab.active{color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(0,0,0,.15)}
 .cat-tab.cat-primary.active{background:var(--blue)}
 .cat-tab.cat-social.active{background:var(--purple)}
 .cat-tab.cat-promo.active{background:var(--green)}
 .cat-tab.cat-updates.active{background:var(--orange)}
 
-/* MAIL LIST */
-.mail-list{flex:1;overflow-y:auto;padding:0 10px 100px;scrollbar-width:none;}
+/* ─── Mail List ─── */
+.mail-list{flex:1;overflow-y:auto;padding:0 10px 100px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .mail-list::-webkit-scrollbar{display:none}
+.empty-state{text-align:center;padding:80px 30px;animation:fadeIn .5s ease}
+.empty-state h3{font-size:18px;font-weight:600;margin-bottom:8px;color:var(--text)}
+.empty-state p{font-size:14px;color:var(--text3);line-height:1.6}
 .loading-skeleton{padding:0 4px}
 .skel-item{display:flex;gap:12px;background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:8px}
-.skel-avatar{width:48px;height:48px;border-radius:50%;background:var(--surface2);flex-shrink:0}
+.skel-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(90deg,var(--surface2) 25%,var(--surface3) 50%,var(--surface2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;flex-shrink:0}
 .skel-body{flex:1}
-.skel-line{height:12px;border-radius:6px;background:var(--surface2);margin-bottom:10px}
+.skel-line{height:12px;border-radius:6px;background:linear-gradient(90deg,var(--surface2) 25%,var(--surface3) 50%,var(--surface2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;margin-bottom:10px}
+.skel-line.w60{width:60%}.skel-line.w80{width:80%}.skel-line.w40{width:40%}
 
-.mail-item{display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:8px;border:1.5px solid transparent;cursor:pointer;position:relative;overflow:hidden;animation:slideIn .35s ease both}
+/* ─── Mail Item ─── */
+.mail-item{display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:8px;border:1.5px solid transparent;box-shadow:0 1px 3px rgba(0,0,0,.03);cursor:pointer;transition:all .2s var(--transition);position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;animation:slideIn .35s ease both}
 .mail-item.unread{border-color:var(--border);background:var(--surface)}
-.mail-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--accent),var(--accent2));}
+.mail-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:4px 0 0 4px}
+.mail-item:active{transform:scale(.985);background:var(--surface2)}
 .mail-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;color:#fff;overflow:hidden;position:relative}
 .mail-avatar.has-logo{background:var(--surface);border:1.5px solid var(--border)}
 .mail-avatar.has-logo img{width:24px;height:24px;object-fit:contain}
@@ -152,61 +194,120 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .mail-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
 .mail-from{font-size:14px;font-weight:500;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
 .mail-item.unread .mail-from{font-weight:700;color:var(--text)}
-.mail-time{font-size:11px;color:var(--text3);flex-shrink:0}
+.mail-time{font-size:11px;color:var(--text3);flex-shrink:0;font-weight:500}
+.mail-item.unread .mail-time{color:var(--accent);font-weight:600}
 .mail-subject{font-size:13px;font-weight:400;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mail-item.unread .mail-subject{font-weight:600}
-.mail-preview{font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mail-preview{font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.5}
 
-/* BOTTOM NAV & DETAIL */
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:var(--tab-h);background:var(--glass);backdrop-filter:blur(20px);border-top:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-around;padding:0 8px;z-index:15}
-.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:1;padding:8px 4px;cursor:pointer;color:var(--text3);position:relative}
+/* ─── Bottom Nav ─── */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:var(--tab-h);background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-around;padding:0 8px;z-index:15}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:1;padding:8px 4px;cursor:pointer;color:var(--text3);transition:all .2s;-webkit-tap-highlight-color:transparent;position:relative}
 .nav-item.active{color:var(--accent)}
-.nav-label{font-size:10px;font-weight:600;}
-.nav-badge{position:absolute;top:2px;right:50%;transform:translateX(calc(50% + 14px));background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center;}
-.fab-compose{position:fixed;bottom:80px;right:calc(50% - 195px);width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 24px rgba(212,82,42,.45);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:16;}
+.nav-item.active svg{stroke-width:2.5}
+.nav-item:active{transform:scale(.9)}
+.nav-label{font-size:10px;font-weight:600;letter-spacing:.02em}
+.nav-badge{position:absolute;top:2px;right:50%;transform:translateX(calc(50% + 14px));background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center;animation:scaleIn .3s ease}
+
+/* ─── FAB ─── */
+.fab-compose{position:fixed;bottom:80px;right:calc(50% - 195px);width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 24px rgba(212,82,42,.45);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:16;transition:all .3s var(--transition)}
+.fab-compose:active{transform:scale(.9)}
 @media(max-width:430px){.fab-compose{right:18px}}
-.detail-view{position:fixed;inset:0;width:100%;background:var(--bg);z-index:30;display:flex;flex-direction:column;max-width:430px;left:50%;transform:translateX(-50%) translateX(100%);transition:transform .35s var(--transition);}
+
+/* ─── Detail View ─── */
+.detail-view{position:fixed;inset:0;width:100%;background:var(--bg);z-index:30;display:flex;flex-direction:column;max-width:430px;left:50%;transform:translateX(-50%) translateX(100%);transition:transform .35s var(--transition);opacity:1}
 .detail-view.show{transform:translateX(-50%) translateX(0)}
-.detail-topbar{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--glass);border-bottom:1px solid var(--glass-border);flex-shrink:0}
-.back-btn{background:none;border:none;cursor:pointer;color:var(--text);padding:8px;border-radius:50%;}
+.detail-topbar{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);flex-shrink:0}
+.back-btn{background:none;border:none;cursor:pointer;color:var(--text);padding:8px;border-radius:50%;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.back-btn:active{background:var(--surface2);transform:scale(.9)}
 .detail-title-bar{flex:1;font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.detail-body{flex:1;overflow-y:auto;background:var(--surface);scrollbar-width:none;}
+.detail-action-btns{display:flex;gap:2px}
+.detail-action-btn{background:none;border:none;cursor:pointer;color:var(--text2);padding:8px;border-radius:50%;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.detail-action-btn:active{background:var(--surface2);transform:scale(.9)}
+.detail-action-btn.active-action{color:var(--yellow)}
+.detail-body{flex:1;overflow-y:auto;padding:0;scrollbar-width:none;background:var(--surface)}
 .detail-body::-webkit-scrollbar{display:none}
-.detail-header{padding:20px 18px;border-bottom:1px solid var(--border);}
+.detail-header{padding:20px 18px;border-bottom:1px solid var(--border);background:var(--surface)}
 .detail-subject{font-family:'DM Serif Display',serif;font-size:22px;line-height:1.35;color:var(--text);margin-bottom:16px}
 .detail-meta{display:flex;align-items:center;gap:12px}
-.detail-sender-avatar{width:48px;height:48px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff}
+.detail-sender-avatar{width:48px;height:48px;border-radius:50%;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff}
 .detail-sender-info{flex:1;min-width:0}
-.detail-sender-name{font-weight:600;font-size:15px;}
-.detail-content{padding:20px 18px 100px;font-size:14.5px;line-height:1.8;color:var(--text2);word-break:break-word;}
-.detail-content img{max-width:100%;height:auto;border-radius:8px;}
+.detail-sender-name{font-weight:600;font-size:15px;margin-bottom:2px}
+.detail-sender-email{font-size:12px;color:var(--text3)}
+.detail-content{padding:20px 18px 100px;font-size:14.5px;line-height:1.8;color:var(--text2);word-break:break-word;background:var(--surface)}
+.detail-content img{max-width:100%;height:auto;border-radius:8px;margin:12px 0}
+.detail-content a{color:var(--accent);text-decoration:none}
 
-/* COMPOSE, SETTINGS, MODALS */
+/* ─── Search View ─── */
+.search-view{position:fixed;inset:0;width:100%;background:var(--bg);z-index:35;display:flex;flex-direction:column;max-width:430px;left:50%;transform:translateX(-50%) translateY(-100%);transition:transform .35s var(--transition);opacity:1}
+.search-view.show{transform:translateX(-50%) translateY(0)}
+.search-header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface);border-bottom:1px solid var(--border)}
+.search-input-wrap{flex:1;display:flex;align-items:center;gap:10px;background:var(--surface2);border-radius:12px;padding:10px 14px}
+.search-input-wrap input{flex:1;background:none;border:none;outline:none;font-size:15px;font-family:inherit;color:var(--text)}
+.search-input-wrap input::placeholder{color:var(--text3)}
+.search-cancel{background:none;border:none;color:var(--accent);font-size:14px;font-weight:600;cursor:pointer;padding:8px}
+.search-results{flex:1;overflow-y:auto;padding:8px 10px 20px}
+
+/* ─── Compose View ─── */
 .compose-view{position:fixed;inset:0;width:100%;background:var(--bg);z-index:40;display:flex;flex-direction:column;max-width:430px;left:50%;transform:translateX(-50%) translateY(100%);transition:transform .35s var(--transition)}
 .compose-view.show{transform:translateX(-50%) translateY(0)}
 .compose-header{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface);border-bottom:1px solid var(--border)}
+.compose-header h2{flex:1;font-size:17px;font-weight:600}
+.compose-close{background:none;border:none;color:var(--text);cursor:pointer;padding:8px;border-radius:50%}
+.compose-send{background:var(--accent);color:#fff;border:none;padding:10px 20px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;}
+.compose-send:disabled{opacity:.5;cursor:not-allowed}
+.compose-body{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.compose-field{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border)}
+.compose-field label{width:60px;font-size:13px;color:var(--text3);font-weight:500}
+.compose-field input{flex:1;background:none;border:none;outline:none;font-size:14px;font-family:inherit;color:var(--text)}
+.compose-field.subject{background:var(--surface2)}
+.compose-field.subject input{font-weight:600}
+.compose-editor{flex:1;padding:16px;min-height:200px}
+.compose-editor [contenteditable]{outline:none;min-height:180px;font-size:14px;line-height:1.7;color:var(--text)}
+
+/* ─── Settings View ─── */
 .settings-view{position:fixed;inset:0;width:100%;background:var(--bg);z-index:38;display:flex;flex-direction:column;max-width:430px;left:50%;transform:translateX(-50%) translateX(100%);transition:transform .35s var(--transition)}
 .settings-view.show{transform:translateX(-50%) translateX(0)}
 .settings-header{display:flex;align-items:center;gap:14px;padding:16px 18px;background:var(--surface);border-bottom:1px solid var(--border)}
 .settings-body{flex:1;overflow-y:auto;padding:16px}
-.settings-card{background:var(--surface);border-radius:16px;border:1px solid var(--border)}
-.settings-dm-row, .settings-item{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;}
+.settings-card{background:var(--surface);border-radius:16px;overflow:hidden}
+.settings-item{display:flex;align-items:center;gap:14px;padding:16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s}
 .settings-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.settings-icon.blue{background:rgba(59,130,246,.12);color:var(--blue)}
+.settings-icon.purple{background:rgba(139,92,246,.12);color:var(--purple)}
+.settings-icon.green{background:rgba(34,197,94,.12);color:var(--green)}
+.settings-info{flex:1;min-width:0}
+.settings-name{font-size:14px;font-weight:500;}
+.settings-desc{font-size:12px;color:var(--text3)}
+.settings-dm-row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer}
+
+/* ─── Account Modal ─── */
 .account-modal{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;max-width:430px;left:50%;transform:translateX(-50%);pointer-events:none}
 .account-modal.show{pointer-events:auto}
 .account-modal-bg{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .3s}
 .account-modal.show .account-modal-bg{opacity:1}
 .account-modal-content{position:relative;background:var(--surface);border-radius:24px 24px 0 0;width:100%;padding:20px;padding-bottom:40px;transform:translateY(100%);transition:transform .35s var(--transition)}
 .account-modal.show .account-modal-content{transform:translateY(0)}
+.account-modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
 .account-option{display:flex;align-items:center;gap:14px;padding:14px;border-radius:14px;cursor:pointer;}
 .account-option.active{background:var(--accent-soft)}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:center;justify-content:center;padding:24px;max-width:430px;left:50%;transform:translateX(-50%);opacity:0;pointer-events:none;transition:opacity .25s}
+.account-option-avatar{width:44px;height:44px;border-radius:50%;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff}
+.account-option-avatar img{width:100%;height:100%;object-fit:cover}
+.account-option-info{flex:1;min-width:0}
+.account-option-name{font-size:14px;font-weight:600;}
+.add-account-btn{display:flex;align-items:center;gap:14px;padding:14px;border-radius:14px;cursor:pointer;margin-top:8px;color:var(--accent);font-weight:600;}
+
+/* ─── Modals / Toast ─── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;padding:24px;max-width:430px;left:50%;transform:translateX(-50%);opacity:0;pointer-events:none;transition:opacity .25s}
 .modal-overlay.show{opacity:1;pointer-events:auto}
 .modal-box{background:var(--surface);border-radius:20px;padding:24px;width:100%;max-width:320px;}
-.modal-btn{flex:1;padding:14px;border-radius:14px;border:none;font-size:14px;font-weight:600;cursor:pointer;}
+.modal-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.modal-icon.danger{background:rgba(239,68,68,.12);color:var(--red)}
+.modal-btn{flex:1;padding:14px;border-radius:14px;border:none;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;}
 .modal-btn.cancel{background:var(--surface2);color:var(--text)}
 .modal-btn.danger{background:var(--red);color:#fff}
-.toast{position:fixed;bottom:calc(var(--tab-h) + 24px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:12px 24px;border-radius:14px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:all .3s var(--transition);pointer-events:none;white-space:nowrap;}
+
+.toast{position:fixed;bottom:calc(var(--tab-h) + 24px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:12px 24px;border-radius:14px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:all .3s var(--transition);pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
@@ -216,7 +317,10 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
   <div class="login-bg"></div>
   <div class="login-content">
     <div class="login-logo">
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+        <polyline points="22,6 12,13 2,6"/>
+      </svg>
     </div>
     <h1 class="login-title">Mail Bespoke</h1>
     <p class="login-sub">Workspace email premium dengan pengalaman mewah. Koneksikan akun Google Anda untuk memulai.</p>
@@ -229,7 +333,8 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 
 <div class="pwa-overlay" id="pwaOverlay" onclick="closePWAPrompt()"></div>
 <div class="pwa-prompt" id="pwaPrompt">
-  <div style="display:flex;align-items:center;gap:16px">
+  <div class="pwa-prompt-handle"></div>
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
     <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(212,82,42,.3)">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
     </div>
@@ -238,9 +343,9 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
       <p style="font-size:13px;color:var(--text3)">Akses lebih cepat dari home screen</p>
     </div>
   </div>
-  <div style="display:flex;gap:12px;margin-top:20px">
-    <button class="pwa-btn secondary" onclick="closePWAPrompt()">Nanti</button>
-    <button class="pwa-btn primary" onclick="installPWA()">Install</button>
+  <div style="display:flex;gap:12px">
+    <button class="pwa-btn secondary" onclick="closePWAPrompt()">Nanti Saja</button>
+    <button class="pwa-btn primary" onclick="installPWA()">Install Sekarang</button>
   </div>
 </div>
 
@@ -252,10 +357,12 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
       <div class="sidebar-logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
       <div class="sidebar-brand"><h1>Mail</h1><span>Bespoke Edition</span></div>
     </div>
-    <div class="sidebar-compose"><button class="compose-sidebar-btn" onclick="openCompose()">Tulis Email</button></div>
+    <div class="sidebar-compose">
+      <button class="compose-sidebar-btn" onclick="openCompose()">Tulis Email</button>
+    </div>
     <nav class="sidebar-nav">
       <div class="nav-section">
-        <div class="nav-link active" onclick="navTo('INBOX', this)">Kotak Masuk</div>
+        <div class="nav-link active" onclick="navTo('INBOX', this)">Kotak Masuk <span class="badge" id="inboxBadge">0</span></div>
         <div class="nav-link" onclick="navTo('STARRED', this)">Berbintang</div>
         <div class="nav-link" onclick="navTo('SENT', this)">Terkirim</div>
         <div class="nav-link" onclick="navTo('TRASH', this)">Sampah</div>
@@ -271,14 +378,20 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
     <div class="sidebar-footer">
       <div class="sidebar-account" onclick="openAccountPicker()">
         <div class="sidebar-avatar" id="sidebarAvatar"></div>
-        <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600" id="sidebarName">User</div><div style="font-size:11px;color:var(--text3)" id="sidebarEmail">user@gmail.com</div></div>
+        <div class="sidebar-account-info">
+          <div class="sidebar-account-name" id="sidebarName">User</div>
+          <div class="sidebar-account-email" id="sidebarEmail">user@gmail.com</div>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="topbar">
     <button class="menu-btn" onclick="openSidebar()"><svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-    <div class="topbar-search" onclick="showToast('Pencarian segera hadir')"><span>Cari email...</span></div>
+    <div class="topbar-search" onclick="openSearch()">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span>Cari email...</span>
+    </div>
     <div class="dm-toggle-wrap">
       <button class="dm-toggle" onclick="toggleDarkMode()">
         <div class="thumb">
@@ -301,7 +414,9 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 
   <div class="mail-list" id="mailList"></div>
 
-  <button class="fab-compose" onclick="openCompose()"><svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+  <button class="fab-compose" onclick="openCompose()">
+    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
 
   <div class="bottom-nav">
     <div class="nav-item active" id="navInbox" onclick="navTo('INBOX');setNav(this)">
@@ -309,7 +424,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
       <span class="nav-label">Inbox</span>
       <span class="nav-badge" id="navInboxBadge" style="display:none">0</span>
     </div>
-    <div class="nav-item" onclick="showToast('Pencarian segera hadir')">
+    <div class="nav-item" onclick="openSearch();setNav(this)">
       <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <span class="nav-label">Cari</span>
     </div>
@@ -320,70 +435,96 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
   </div>
 </div>
 
+<!-- Search View -->
+<div class="search-view" id="searchView">
+  <div class="search-header">
+    <div class="search-input-wrap">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Cari email..." oninput="handleSearch(this.value)">
+    </div>
+    <button class="search-cancel" onclick="closeSearch()">Batal</button>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+</div>
+
+<!-- Detail View -->
 <div class="detail-view" id="detailView">
   <div class="detail-topbar">
     <button class="back-btn" onclick="closeDetail()"><svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
     <span class="detail-title-bar" id="detailTitleBar">Email</span>
+    <div class="detail-action-btns">
+      <button class="detail-action-btn" id="btnStar" onclick="toggleStarCurrent()"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+      <button class="detail-action-btn" onclick="archiveCurrent()"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg></button>
+      <button class="detail-action-btn" onclick="trashCurrent()"><svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+    </div>
   </div>
   <div class="detail-body" id="detailBody"></div>
 </div>
 
+<!-- Compose View -->
 <div class="compose-view" id="composeView">
   <div class="compose-header">
     <button class="compose-close" onclick="closeCompose()"><svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2 style="flex:1;font-size:17px">Email Baru</h2>
-    <button class="compose-send" id="composeSendBtn" onclick="sendEmail()" disabled style="background:var(--accent);color:#fff;border:none;padding:10px 20px;border-radius:12px;font-weight:600">Kirim</button>
+    <h2>Email Baru</h2>
+    <button class="compose-send" id="composeSendBtn" onclick="sendEmail()" disabled>Kirim</button>
   </div>
-  <div style="flex:1;display:flex;flex-direction:column;padding:16px">
-    <input type="email" id="composeTo" placeholder="Ke" oninput="validateCompose()" style="padding:14px;border:none;border-bottom:1px solid var(--border);background:none;color:var(--text);font-family:inherit;outline:none">
-    <input type="text" id="composeSubject" placeholder="Subjek" style="padding:14px;border:none;border-bottom:1px solid var(--border);background:none;color:var(--text);font-family:inherit;font-weight:600;outline:none">
-    <div contenteditable="true" id="composeBody" oninput="validateCompose()" style="flex:1;padding:14px;outline:none;line-height:1.6"></div>
+  <div class="compose-body">
+    <div class="compose-field"><label>Ke</label><input type="email" id="composeTo" oninput="validateCompose()"></div>
+    <div class="compose-field subject"><label>Subjek</label><input type="text" id="composeSubject"></div>
+    <div class="compose-editor"><div contenteditable="true" id="composeBody" oninput="validateCompose()"></div></div>
   </div>
 </div>
 
+<!-- Settings View -->
 <div class="settings-view" id="settingsView">
   <div class="settings-header">
     <button class="back-btn" onclick="closeSettings()"><svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
-    <h2 style="font-size:18px">Pengaturan</h2>
+    <h2>Pengaturan</h2>
   </div>
   <div class="settings-body">
     <div class="settings-card">
       <div class="settings-dm-row" onclick="toggleDarkMode()">
         <div class="settings-icon purple"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></div>
-        <div class="settings-name" style="flex:1">Mode Gelap (OLED)</div>
+        <div class="settings-info"><div class="settings-name">Mode Gelap (OLED)</div></div>
       </div>
-      <div class="settings-dm-row" onclick="requestNotificationPermission()">
+      <div class="settings-item" onclick="requestNotificationPermission()">
         <div class="settings-icon blue"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div>
-        <div class="settings-name" style="flex:1">Izin Notifikasi Browser</div>
+        <div class="settings-info"><div class="settings-name">Izin Notifikasi</div></div>
       </div>
-      <div class="settings-dm-row" onclick="showPWAPrompt()">
+      <div class="settings-item" onclick="showPWAPrompt()">
         <div class="settings-icon green"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
-        <div class="settings-name" style="flex:1">Install Aplikasi (PWA)</div>
+        <div class="settings-info"><div class="settings-name">Install Aplikasi (PWA)</div></div>
       </div>
     </div>
-    <div class="settings-card" style="margin-top:20px;text-align:center;padding:16px;color:var(--red);font-weight:600;cursor:pointer" onclick="document.getElementById('confirmModal').classList.add('show')">
-      Keluar dari Semua Akun
+    <div class="settings-card" style="margin-top:20px">
+      <div class="settings-item" onclick="showLogoutModal()" style="justify-content:center;border-bottom:none">
+        <span style="color:var(--red);font-weight:600">Keluar dari Semua Akun</span>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- Account Modal -->
 <div class="account-modal" id="accountModal">
   <div class="account-modal-bg" onclick="closeAccountPicker()"></div>
   <div class="account-modal-content">
-    <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px"></div>
-    <h3 style="margin-bottom:16px">Pilih Akun</h3>
+    <div class="account-modal-handle"></div>
+    <h3>Pilih Akun</h3>
     <div id="accountOptions"></div>
-    <div style="padding:14px;color:var(--accent);font-weight:600;cursor:pointer;margin-top:8px" onclick="handleLogin();closeAccountPicker()">+ Tambah akun lain</div>
+    <div class="add-account-btn" onclick="handleLogin();closeAccountPicker()">
+      + Tambah akun lain
+    </div>
   </div>
 </div>
 
+<!-- Confirm Modal -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal-box">
-    <div style="width:56px;height:56px;border-radius:50%;background:rgba(239,68,68,.12);color:var(--red);display:flex;align-items:center;justify-content:center;margin:0 auto 16px"><svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
-    <div style="text-align:center;font-size:18px;font-weight:700;margin-bottom:24px">Keluar?</div>
-    <div style="display:flex;gap:10px">
+    <div class="modal-icon danger"><svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
+    <p style="text-align:center;font-weight:600;margin-bottom:20px">Keluar dari semua akun?</p>
+    <div style="display:flex;gap:12px">
       <button class="modal-btn cancel" onclick="document.getElementById('confirmModal').classList.remove('show')">Batal</button>
-      <button class="modal-btn danger" onclick="localStorage.clear();location.reload()">Ya</button>
+      <button class="modal-btn danger" id="modalConfirmBtn">Keluar</button>
     </div>
   </div>
 </div>
@@ -392,126 +533,89 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 
 <script>
 // ─────────────────────────────────────────────────────────────────────
-//  PWA REGISTRATION
+//  PWA
 // ─────────────────────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(e => console.warn('SW reg failed'));
+    navigator.serviceWorker.register('/sw.js').catch(e => console.warn('SW reg failed', e));
   });
 }
-
 let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault(); deferredPrompt = e;
-});
-
-function showPWAPrompt() {
-  document.getElementById('pwaOverlay').classList.add('show');
-  document.getElementById('pwaPrompt').classList.add('show');
-}
-function closePWAPrompt() {
-  document.getElementById('pwaOverlay').classList.remove('show');
-  document.getElementById('pwaPrompt').classList.remove('show');
-}
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
+function showPWAPrompt() { document.getElementById('pwaOverlay').classList.add('show'); document.getElementById('pwaPrompt').classList.add('show'); }
+function closePWAPrompt() { document.getElementById('pwaOverlay').classList.remove('show'); document.getElementById('pwaPrompt').classList.remove('show'); }
 function installPWA() {
   closePWAPrompt();
-  if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; } 
-  else { showToast('Buka menu Chrome/Brave (⋮) -> Install App'); }
+  if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
+  else showToast('Buka menu browser (⋮) → Install App');
 }
-
-// ─────────────────────────────────────────────────────────────────────
-//  RADAR NOTIFIKASI BACKGROUND
-// ─────────────────────────────────────────────────────────────────────
 function requestNotificationPermission() {
   if (!("Notification" in window)) return showToast('Browser tidak mendukung notif.');
-  Notification.requestPermission().then(permission => {
-    if (permission === "granted") showToast('✅ Notifikasi aktif!');
-    else showToast('Izin notifikasi ditolak.');
-  });
-}
-
-let lastUnreadCount = null;
-setInterval(() => {
-  if (activeEmail && sessions[activeEmail]) {
-    checkBackgroundEmail();
-  }
-}, 60000); // Cek tiap 60 detik
-
-async function checkBackgroundEmail() {
-  try {
-    const data = await gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages?q=in:inbox is:unread`);
-    const currentUnread = data.resultSizeEstimate || 0;
-    
-    if (lastUnreadCount !== null && currentUnread > lastUnreadCount) {
-      if (Notification.permission === "granted") {
-        new Notification("Mail Bespoke", {
-          body: "Anda memiliki pesan masuk baru.",
-          icon: "https://cdn-icons-png.flaticon.com/512/281/281769.png"
-        });
-      }
-      if (currentLabel === 'CATEGORY:primary' || currentLabel === 'INBOX') {
-         fetchMessages('CATEGORY:primary');
-      }
-    }
-    lastUnreadCount = currentUnread;
-  } catch(e) {}
+  Notification.requestPermission().then(p => showToast(p === "granted" ? '✅ Notifikasi aktif!' : 'Izin ditolak'));
 }
 
 // ─────────────────────────────────────────────────────────────────────
-//  CONFIG & BRANDS
+//  CONFIG
 // ─────────────────────────────────────────────────────────────────────
 const CLIENT_ID = '150908117503-5bj62qlgafq2snd2boamiinq16adt4mp.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
 
 const BRANDS = {
-  linkedin:{color:'#0A66C2',name:'LinkedIn'},github:{color:'#181717',name:'GitHub'},
-  vercel:{color:'#000000',name:'Vercel'},google:{color:'#4285F4',name:'Google'},
-  youtube:{color:'#FF0000',name:'YouTube'},twitter:{color:'#000000',name:'X'},
-  facebook:{color:'#1877F2',name:'Facebook'},instagram:{color:'#E4405F',name:'Instagram'},
-  whatsapp:{color:'#25D366',name:'WhatsApp'},tiktok:{color:'#000000',name:'TikTok'},
-  spotify:{color:'#1DB954',name:'Spotify'},netflix:{color:'#E50914',name:'Netflix'},
-  amazon:{color:'#FF9900',name:'Amazon'},apple:{color:'#000000',name:'Apple'},
-  microsoft:{color:'#5E5E5E',name:'Microsoft'},slack:{color:'#4A154B',name:'Slack'},
-  discord:{color:'#5865F2',name:'Discord'},notion:{color:'#000000',name:'Notion'},
-  figma:{color:'#F24E1E',name:'Figma'},stripe:{color:'#635BFF',name:'Stripe'},
-  paypal:{color:'#00457C',name:'PayPal'},shopee:{color:'#EE4D2D',name:'Shopee'},
-  tokopedia:{color:'#42B549',name:'Tokopedia'},grab:{color:'#00B14F',name:'Grab'},
-  gojek:{color:'#00880F',name:'Gojek'},telegram:{color:'#26A5E4',name:'Telegram'},
-  zoom:{color:'#2D8CFF',name:'Zoom'},dropbox:{color:'#0061FF',name:'Dropbox'},
-  netlify:{color:'#00C7B7',name:'Netlify'},supabase:{color:'#3ECF8E',name:'Supabase'},
-  openai:{color:'#412991',name:'OpenAI'},roblox:{color:'#000000',name:'Roblox'},
-  epicgames:{color:'#313131',name:'Epic Games'},steam:{color:'#000000',name:'Steam'},
-  pinterest:{color:'#E60023',name:'Pinterest'},reddit:{color:'#FF4500',name:'Reddit'},
-  twitch:{color:'#9146FF',name:'Twitch'},yahoo:{color:'#430297',name:'Yahoo'},
-  canva:{color:'#00C4CC',name:'Canva'},gitlab:{color:'#FC6D26',name:'GitLab'},
-  stackoverflow:{color:'#F58025',name:'Stack Overflow'},dicoding:{color:'#2D3E50',name:'Dicoding'},
-  medium:{color:'#000000',name:'Medium'},quora:{color:'#B92B27',name:'Quora'},
-  adobe:{color:'#FF0000',name:'Adobe'},airbnb:{color:'#FF5A5F',name:'Airbnb'},
-  uber:{color:'#000000',name:'Uber'}
+  linkedin:{color:'#0A66C2'},github:{color:'#181717'},vercel:{color:'#000000'},
+  google:{color:'#4285F4'},youtube:{color:'#FF0000'},twitter:{color:'#000000'},
+  facebook:{color:'#1877F2'},instagram:{color:'#E4405F'},whatsapp:{color:'#25D366'},
+  tiktok:{color:'#000000'},spotify:{color:'#1DB954'},netflix:{color:'#E50914'},
+  amazon:{color:'#FF9900'},apple:{color:'#000000'},microsoft:{color:'#5E5E5E'},
+  slack:{color:'#4A154B'},discord:{color:'#5865F2'},notion:{color:'#000000'},
+  figma:{color:'#F24E1E'},stripe:{color:'#635BFF'},paypal:{color:'#00457C'},
+  shopee:{color:'#EE4D2D'},tokopedia:{color:'#42B549'},grab:{color:'#00B14F'},
+  gojek:{color:'#00880F'},telegram:{color:'#26A5E4'},zoom:{color:'#2D8CFF'},
+  dropbox:{color:'#0061FF'},netlify:{color:'#00C7B7'},supabase:{color:'#3ECF8E'},
+  openai:{color:'#412991'},roblox:{color:'#000000'},epicgames:{color:'#313131'},
+  steam:{color:'#000000'},pinterest:{color:'#E60023'},reddit:{color:'#FF4500'},
+  twitch:{color:'#9146FF'},yahoo:{color:'#430297'},canva:{color:'#00C4CC'},
+  gitlab:{color:'#FC6D26'},stackoverflow:{color:'#F58025'},dicoding:{color:'#2D3E50'},
+  medium:{color:'#000000'},quora:{color:'#B92B27'},adobe:{color:'#FF0000'},
+  airbnb:{color:'#FF5A5F'},uber:{color:'#000000'}
 };
 
 const DOMAIN_MAP = {
-  'linkedin.com':'linkedin','e.linkedin.com':'linkedin','github.com':'github','noreply.github.com':'github','vercel.com':'vercel',
-  'google.com':'google','accounts.google.com':'google','youtube.com':'youtube','twitter.com':'twitter','x.com':'twitter','facebook.com':'facebook',
-  'facebookmail.com':'facebook','instagram.com':'instagram','whatsapp.com':'whatsapp','tiktok.com':'tiktok','spotify.com':'spotify','netflix.com':'netflix',
-  'amazon.com':'amazon','apple.com':'apple','microsoft.com':'microsoft','slack.com':'slack','discord.com':'discord','discordapp.com':'discord',
-  'notion.so':'notion','figma.com':'figma','stripe.com':'stripe','paypal.com':'paypal','shopee.co.id':'shopee','shopee.com':'shopee',
-  'tokopedia.com':'tokopedia','grab.com':'grab','gojek.com':'gojek','telegram.org':'telegram','zoom.us':'zoom','dropbox.com':'dropbox',
-  'netlify.com':'netlify','supabase.io':'supabase','supabase.com':'supabase','openai.com':'openai','roblox.com':'roblox','robloxmail.com':'roblox',
-  'epicgames.com':'epicgames','steampowered.com':'steam','steam.com':'steam','pinterest.com':'pinterest','reddit.com':'reddit',
-  'redditmail.com':'reddit','twitch.tv':'twitch','yahoo.com':'yahoo','yahoo.co.id':'yahoo','canva.com':'canva','gitlab.com':'gitlab',
-  'stackoverflow.com':'stackoverflow','dicoding.com':'dicoding','medium.com':'medium','quora.com':'quora','adobe.com':'adobe',
+  'linkedin.com':'linkedin','e.linkedin.com':'linkedin','github.com':'github',
+  'noreply.github.com':'github','vercel.com':'vercel','google.com':'google',
+  'accounts.google.com':'google','youtube.com':'youtube','twitter.com':'twitter',
+  'x.com':'twitter','facebook.com':'facebook','facebookmail.com':'facebook',
+  'instagram.com':'instagram','whatsapp.com':'whatsapp','tiktok.com':'tiktok',
+  'spotify.com':'spotify','netflix.com':'netflix','amazon.com':'amazon',
+  'apple.com':'apple','microsoft.com':'microsoft','slack.com':'slack',
+  'discord.com':'discord','discordapp.com':'discord','notion.so':'notion',
+  'figma.com':'figma','stripe.com':'stripe','paypal.com':'paypal',
+  'shopee.co.id':'shopee','shopee.com':'shopee','tokopedia.com':'tokopedia',
+  'grab.com':'grab','gojek.com':'gojek','telegram.org':'telegram',
+  'zoom.us':'zoom','dropbox.com':'dropbox','netlify.com':'netlify',
+  'supabase.io':'supabase','supabase.com':'supabase','openai.com':'openai',
+  'roblox.com':'roblox','robloxmail.com':'roblox','epicgames.com':'epicgames',
+  'steampowered.com':'steam','steam.com':'steam','pinterest.com':'pinterest',
+  'reddit.com':'reddit','redditmail.com':'reddit','twitch.tv':'twitch',
+  'yahoo.com':'yahoo','yahoo.co.id':'yahoo','canva.com':'canva',
+  'gitlab.com':'gitlab','stackoverflow.com':'stackoverflow','dicoding.com':'dicoding',
+  'medium.com':'medium','quora.com':'quora','adobe.com':'adobe',
   'airbnb.com':'airbnb','uber.com':'uber'
 };
 
+// ─────────────────────────────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────────────────────────────
 let sessions = JSON.parse(localStorage.getItem('mail_sessions') || '{}');
 let activeEmail = localStorage.getItem('mail_active_email');
-let currentLabel = 'CATEGORY:primary';
+let currentLabel = 'INBOX';
+let currentCategory = 'primary';
 let unreadCount = 0;
 let isDark = localStorage.getItem('dark_mode') === 'true';
 let currentMsgId = null;
 
-// FIX BUG TAB UTAMA
+// ─────────────────────────────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   if (isDark) {
     document.documentElement.setAttribute('data-theme', 'dark');
@@ -521,82 +625,55 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('mainApp').style.display = 'flex';
     renderTopAvatars();
-    updateSidebarAccount(); // <--- INI FUNGSI YANG TADI ILANG, SEKARANG UDAH BALIK
-    fetchMessages('CATEGORY:primary'); 
+    updateSidebarAccount();
+    // ✅ FIX: Selalu mulai dari category:primary (tab Utama)
+    fetchMessages('CATEGORY:primary');
   }
 });
 
+// ─────────────────────────────────────────────────────────────────────
+//  DARK MODE
+// ─────────────────────────────────────────────────────────────────────
 function toggleDarkMode() {
   isDark = !isDark;
   localStorage.setItem('dark_mode', isDark);
   document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '');
   document.getElementById('themeColor').content = isDark ? '#000000' : '#D4522A';
-  showToast(isDark ? '🌙 OLED Black Aktif' : '☀️ Terang');
+  showToast(isDark ? '🌙 OLED Black Aktif' : '☀️ Mode Terang');
 }
 
 // ─────────────────────────────────────────────────────────────────────
-//  AUTH (Kebal Anti-Bisu)
+//  AUTH
 // ─────────────────────────────────────────────────────────────────────
 function handleLogin() {
-  try {
-    const btn = document.getElementById('loginBtn');
-    if (btn) btn.innerHTML = 'Memproses...';
-
-    if (typeof google === 'undefined' || !google.accounts) {
-      alert("⚠️ ERROR: Script Google API belum loading! Coba refresh webnya atau pastikan koneksi lancar.");
-      if (btn) btn.innerHTML = 'Masuk dengan Google';
-      return;
+  const client = google.accounts.oauth2.initCodeClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    ux_mode: 'popup',
+    callback: async (response) => {
+      if (response.error) return showToast('Login dibatalkan');
+      showToast('Membuat sesi...');
+      try {
+        const tokenReply = await fetch('/api/token', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: response.code })
+        }).then(r => r.json());
+        if (!tokenReply.access_token) throw new Error('Token failed');
+        const userInfo = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+          headers: { 'Authorization': 'Bearer ' + tokenReply.access_token }
+        }).then(r => r.json());
+        sessions[userInfo.email] = {
+          email: userInfo.email, name: userInfo.name, picture: userInfo.picture,
+          token: tokenReply.access_token,
+          refresh_token: tokenReply.refresh_token || sessions[userInfo.email]?.refresh_token
+        };
+        localStorage.setItem('mail_sessions', JSON.stringify(sessions));
+        switchAccount(userInfo.email);
+        if (Notification.permission !== "granted") requestNotificationPermission();
+      } catch(e) { showToast('Gagal login'); }
     }
-
-    const client = google.accounts.oauth2.initCodeClient({
-      client_id: CLIENT_ID,
-      scope: SCOPES,
-      ux_mode: 'popup',
-      callback: async (response) => {
-        if (response.error) {
-          alert("⚠️ ERROR GOOGLE: Login dibatalkan atau popup diblokir browser.");
-          if (btn) btn.innerHTML = 'Masuk dengan Google';
-          return;
-        }
-        
-        if (btn) btn.innerHTML = 'Membangun Sesi...';
-        try {
-          const tokenReply = await fetch('/api/token', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code: response.code })
-          }).then(r => r.json());
-          
-          if (!tokenReply.access_token) {
-            throw new Error(tokenReply.error || 'Token API Vercel Kosong');
-          }
-          
-          const userInfo = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', { 
-            headers: { 'Authorization': 'Bearer ' + tokenReply.access_token } 
-          }).then(r => r.json());
-          
-          sessions[userInfo.email] = {
-            email: userInfo.email, name: userInfo.name, picture: userInfo.picture,
-            token: tokenReply.access_token,
-            refresh_token: tokenReply.refresh_token || sessions[userInfo.email]?.refresh_token
-          };
-          localStorage.setItem('mail_sessions', JSON.stringify(sessions));
-          
-          switchAccount(userInfo.email);
-          if (Notification.permission !== "granted") requestNotificationPermission();
-          if (btn) btn.innerHTML = 'Masuk dengan Google';
-          
-        } catch(err) { 
-          alert("⚠️ ERROR VERCEL API: " + err.message); 
-          if (btn) btn.innerHTML = 'Masuk dengan Google';
-        }
-      }
-    });
-    client.requestCode();
-  } catch(e) {
-    alert("⚠️ KODE CRASH: " + e.message);
-    const btn = document.getElementById('loginBtn');
-    if (btn) btn.innerHTML = 'Masuk dengan Google';
-  }
+  });
+  client.requestCode();
 }
 
 function switchAccount(email) {
@@ -606,10 +683,22 @@ function switchAccount(email) {
   document.getElementById('mainApp').style.display = 'flex';
   renderTopAvatars();
   updateSidebarAccount();
-  
-  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelector('.cat-tab[data-category="primary"]')?.classList.add('active');
+  // ✅ FIX: Reset ke tab primary saat ganti akun
+  currentCategory = 'primary';
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.cat-tab[data-category="primary"]').classList.add('active');
+  document.getElementById('categoryTabs').style.display = 'flex';
   fetchMessages('CATEGORY:primary');
+}
+
+function updateSidebarAccount() {
+  const acc = sessions[activeEmail];
+  if (!acc) return;
+  const el = document.getElementById('sidebarAvatar');
+  if (acc.picture) el.innerHTML = `<img src="${acc.picture}">`;
+  else { el.textContent = acc.name[0].toUpperCase(); el.style.background = colorFor(acc.name); }
+  document.getElementById('sidebarName').textContent = acc.name;
+  document.getElementById('sidebarEmail').textContent = acc.email;
 }
 
 function renderTopAvatars() {
@@ -618,21 +707,11 @@ function renderTopAvatars() {
   Object.values(sessions).forEach(acc => {
     const div = document.createElement('div');
     div.className = `avatar-btn ${acc.email === activeEmail ? 'active-acc' : ''}`;
-    div.onclick = () => { if(acc.email !== activeEmail) switchAccount(acc.email); };
+    div.onclick = () => { if (acc.email !== activeEmail) switchAccount(acc.email); };
     if (acc.picture) div.innerHTML = `<img src="${acc.picture}">`;
     else { div.textContent = acc.name[0].toUpperCase(); div.style.background = colorFor(acc.name); }
     container.appendChild(div);
   });
-}
-
-function updateSidebarAccount() {
-  const acc = sessions[activeEmail];
-  if (!acc) return;
-  const avatar = document.getElementById('sidebarAvatar');
-  avatar.innerHTML = acc.picture ? `<img src="${acc.picture}">` : acc.name[0].toUpperCase();
-  avatar.style.background = acc.picture ? '' : colorFor(acc.name);
-  document.getElementById('sidebarName').textContent = acc.name;
-  document.getElementById('sidebarEmail').textContent = acc.email;
 }
 
 function openAccountPicker() {
@@ -642,29 +721,36 @@ function openAccountPicker() {
     const isActive = acc.email === activeEmail;
     const div = document.createElement('div');
     div.className = `account-option ${isActive ? 'active' : ''}`;
-    div.onclick = () => { switchAccount(acc.email); document.getElementById('accountModal').classList.remove('show'); };
+    div.onclick = () => { switchAccount(acc.email); closeAccountPicker(); };
     div.innerHTML = `<div class="account-option-avatar" style="background:${colorFor(acc.name)}">${acc.picture ? `<img src="${acc.picture}">` : acc.name[0].toUpperCase()}</div>
-                     <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:14px">${escHtml(acc.name)}</div></div>`;
+                     <div class="account-option-info"><div class="account-option-name">${escHtml(acc.name)}</div><div style="font-size:12px;color:var(--text3)">${escHtml(acc.email)}</div></div>`;
     options.appendChild(div);
   });
   document.getElementById('accountModal').classList.add('show');
 }
 function closeAccountPicker() { document.getElementById('accountModal').classList.remove('show'); }
 
+function showLogoutModal() {
+  document.getElementById('confirmModal').classList.add('show');
+  document.getElementById('modalConfirmBtn').onclick = () => { localStorage.clear(); location.reload(); };
+}
+
 // ─────────────────────────────────────────────────────────────────────
-//  GMAIL API Core
+//  GMAIL API
 // ─────────────────────────────────────────────────────────────────────
 async function gFetch(url, opts = {}) {
   let token = sessions[activeEmail]?.token;
-  let res = await fetch(url, { ...opts, headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }});
-  
-  if (res.status === 401 && sessions[activeEmail].refresh_token) {
+  let res = await fetch(url, { ...opts, headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' } });
+  if (res.status === 401 && sessions[activeEmail]?.refresh_token) {
     try {
-      const refRes = await fetch('/api/token', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ refresh_token: sessions[activeEmail].refresh_token }) }).then(r => r.json());
+      const refRes = await fetch('/api/token', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: sessions[activeEmail].refresh_token })
+      }).then(r => r.json());
       if (refRes.access_token) {
         sessions[activeEmail].token = refRes.access_token;
         localStorage.setItem('mail_sessions', JSON.stringify(sessions));
-        res = await fetch(url, { ...opts, headers: { 'Authorization': 'Bearer ' + refRes.access_token, 'Content-Type': 'application/json' }});
+        res = await fetch(url, { ...opts, headers: { 'Authorization': 'Bearer ' + refRes.access_token, 'Content-Type': 'application/json' } });
       }
     } catch(e) { throw new Error('Expired'); }
   }
@@ -675,150 +761,344 @@ async function gFetch(url, opts = {}) {
 async function fetchMessages(label) {
   currentLabel = label;
   const listEl = document.getElementById('mailList');
-  listEl.innerHTML = `<div class="loading-skeleton">${[1,2,3,4,5].map(()=>`<div class="skel-item"><div class="skel-avatar"></div><div class="skel-body"><div class="skel-line" style="width:60%"></div><div class="skel-line" style="width:80%"></div></div></div>`).join('')}</div>`;
-  
+  listEl.innerHTML = `<div class="loading-skeleton">${[1,2,3,4,5].map(() =>
+    `<div class="skel-item"><div class="skel-avatar"></div><div class="skel-body"><div class="skel-line w60"></div><div class="skel-line w80"></div></div></div>`
+  ).join('')}</div>`;
+
   try {
     let q = '';
-    if (label.startsWith('CATEGORY:')) q = `in:inbox category:${label.split(':')[1]}`;
-    else {
-      const map = { INBOX:'in:inbox', STARRED:'is:starred', SENT:'in:sent', TRASH:'in:trash' };
+    if (label.startsWith('CATEGORY:')) {
+      q = `in:inbox category:${label.split(':')[1]}`;
+    } else {
+      const map = { STARRED: 'is:starred', SENT: 'in:sent', TRASH: 'in:trash' };
       q = map[label] || 'in:inbox';
     }
+
     const data = await gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=25&q=${encodeURIComponent(q)}`);
     const list = data.messages || [];
-    if (list.length === 0) { listEl.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--text3)">Pesan kosong</div>`; return; }
-    
-    const msgs = await Promise.all(list.map(m => gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`)));
+
+    if (list.length === 0) {
+      listEl.innerHTML = `<div class="empty-state"><h3>Kosong</h3><p>Tidak ada email di sini.</p></div>`;
+      return;
+    }
+
+    const msgs = await Promise.all(list.map(m =>
+      gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`)
+    ));
+
     unreadCount = msgs.filter(m => m.labelIds?.includes('UNREAD')).length;
     document.getElementById('inboxBadge').textContent = unreadCount;
     document.getElementById('navInboxBadge').textContent = unreadCount;
-    document.getElementById('navInboxBadge').style.display = unreadCount > 0 && (label === 'INBOX' || label.startsWith('CATEGORY:')) ? 'block' : 'none';
+    document.getElementById('navInboxBadge').style.display = (unreadCount > 0 && label.includes('INBOX') || label.includes('CATEGORY')) ? 'block' : 'none';
     renderMessages(msgs);
-  } catch(e) { listEl.innerHTML = '<p style="text-align:center;padding:20px;color:var(--red)">Gagal memuat</p>'; }
+  } catch(e) {
+    listEl.innerHTML = '<p style="text-align:center;padding:40px;color:var(--red)">Gagal memuat email</p>';
+  }
 }
 
+// ─────────────────────────────────────────────────────────────────────
+//  RENDER
+// ─────────────────────────────────────────────────────────────────────
 const COLORS = ['#667EEA','#F093FB','#4FACFE','#43E97B','#FA709A'];
-function colorFor(s) { let h=0; for(let c of (s||'')) h+=c.charCodeAt(0); return COLORS[h%COLORS.length]; }
-function initials(name) { return (name||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase() || '?'; }
-function escHtml(s) { return String(s||'').replace(/</g,'<').replace(/>/g,'>'); }
-function showToast(m) { const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
+function colorFor(s) { let h = 0; for (let c of (s || '')) h += c.charCodeAt(0); return COLORS[h % COLORS.length]; }
+function initials(name) { return (name || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase() || '?'; }
+function escHtml(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function showToast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
 
 function getBrandFromEmail(email) {
   const match = email.match(/@([a-zA-Z0-9.-]+)/);
   if (!match) return null;
   const domain = match[1].toLowerCase();
   for (const [key, brandKey] of Object.entries(DOMAIN_MAP)) {
-    if (domain.includes(key) || domain === key) return { ...BRANDS[brandKey], key: brandKey };
+    if (domain === key || domain.endsWith('.' + key)) return { ...BRANDS[brandKey], key: brandKey };
   }
   return null;
 }
 
+function formatTime(headers) {
+  const dateStr = headers.find(h => h.name === 'Date')?.value || '';
+  if (!dateStr) return '';
+  try {
+    const d = new Date(dateStr);
+    const now = new Date();
+    const diff = now - d;
+    if (diff < 86400000 && d.getDate() === now.getDate()) {
+      return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    } else if (diff < 7 * 86400000) {
+      return d.toLocaleDateString('id-ID', { weekday: 'short' });
+    } else {
+      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+    }
+  } catch(e) { return ''; }
+}
+
 function renderMessages(msgs) {
-  const list = document.getElementById('mailList'); list.innerHTML = '';
+  const list = document.getElementById('mailList');
+  list.innerHTML = '';
   msgs.forEach((msg, i) => {
-    const fromStr = msg.payload.headers.find(h=>h.name==='From')?.value||'';
-    const fromName = fromStr.split('<')[0].replace(/"/g,'').trim() || fromStr.split('@')[0];
+    const fromStr = msg.payload.headers.find(h => h.name === 'From')?.value || '';
+    const fromName = fromStr.split('<')[0].replace(/"/g, '').trim() || fromStr.split('@')[0];
     const fromEmail = fromStr.match(/<(.+)>/)?.[1] || fromStr;
-    const sub = msg.payload.headers.find(h=>h.name==='Subject')?.value||'(Tanpa subjek)';
+    const sub = msg.payload.headers.find(h => h.name === 'Subject')?.value || '(Tanpa subjek)';
+    const timeStr = formatTime(msg.payload.headers);
     const isUnread = msg.labelIds?.includes('UNREAD');
     const brand = getBrandFromEmail(fromEmail);
-    
+
     let avatarHTML = brand
-      ? `<div class="mail-avatar has-logo" style="background:${brand.color}15;border-color:${brand.color}30"><img src="https://cdn.simpleicons.org/${brand.key}/${isDark?'ffffff':brand.color.replace('#','')}" onerror="this.outerHTML='${initials(fromName)}';this.parentElement.style.background='${colorFor(fromName)}'"></div>`
-      : `<div class="mail-avatar" style="background:linear-gradient(135deg,${colorFor(fromName)},#222)">${initials(fromName)}</div>`;
+      ? `<div class="mail-avatar has-logo" style="background:${brand.color}18"><img src="https://cdn.simpleicons.org/${brand.key}/${isDark ? 'ffffff' : brand.color.replace('#','')}" onerror="this.parentElement.className='mail-avatar';this.parentElement.style.background='linear-gradient(135deg,${colorFor(fromName)},#333)';this.parentElement.innerHTML='${initials(fromName)}'"></div>`
+      : `<div class="mail-avatar" style="background:linear-gradient(135deg,${colorFor(fromName)},${colorFor(fromEmail)})">${initials(fromName)}</div>`;
 
     const div = document.createElement('div');
     div.className = 'mail-item' + (isUnread ? ' unread' : '');
     div.style.animationDelay = (i * 0.03) + 's';
-    div.innerHTML = `${avatarHTML}<div class="mail-body"><div class="mail-header"><span class="mail-from" style="font-size:14px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(fromName)}</span></div><div class="mail-subject" style="font-size:13px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(sub)}</div><div class="mail-preview" style="font-size:12px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(msg.snippet)}</div></div>`;
+    div.innerHTML = `${avatarHTML}
+      <div class="mail-body">
+        <div class="mail-header">
+          <span class="mail-from">${escHtml(fromName)}</span>
+          <span class="mail-time">${escHtml(timeStr)}</span>
+        </div>
+        <div class="mail-subject">${escHtml(sub)}</div>
+        <div class="mail-preview">${escHtml(msg.snippet)}</div>
+      </div>`;
     div.onclick = () => openDetail(msg.id);
     list.appendChild(div);
   });
 }
 
 // ─────────────────────────────────────────────────────────────────────
-//  UI INTERACTIONS
+//  DETAIL
 // ─────────────────────────────────────────────────────────────────────
 async function openDetail(msgId) {
   currentMsgId = msgId;
   document.getElementById('detailView').classList.add('show');
-  document.getElementById('detailBody').innerHTML = '<p style="padding:40px;text-align:center">Memuat...</p>';
+  document.getElementById('detailBody').innerHTML = '<p style="padding:60px;text-align:center;color:var(--text3)">Memuat...</p>';
+  document.getElementById('btnStar').classList.remove('active-action');
   try {
     const msg = await gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msgId}?format=full`);
-    const fromStr = msg.payload.headers.find(h=>h.name==='From')?.value||'';
-    const sub = msg.payload.headers.find(h=>h.name==='Subject')?.value||'';
-    const fromName = fromStr.split('<')[0].replace(/"/g,'').trim() || fromStr;
+    const fromStr = msg.payload.headers.find(h => h.name === 'From')?.value || '';
+    const sub = msg.payload.headers.find(h => h.name === 'Subject')?.value || '';
+    const fromName = fromStr.split('<')[0].replace(/"/g, '').trim() || fromStr;
+    const fromEmail = fromStr.match(/<(.+)>/)?.[1] || fromStr;
+    const dateStr = msg.payload.headers.find(h => h.name === 'Date')?.value || '';
+    const isStarred = msg.labelIds?.includes('STARRED');
+    if (isStarred) document.getElementById('btnStar').classList.add('active-action');
+
     document.getElementById('detailTitleBar').textContent = sub;
+
     if (msg.labelIds?.includes('UNREAD')) {
-      gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msgId}/modify`, { method: 'POST', body: JSON.stringify({ removeLabelIds: ['UNREAD'] }) }).catch(()=>{});
+      gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msgId}/modify`, {
+        method: 'POST', body: JSON.stringify({ removeLabelIds: ['UNREAD'] })
+      }).catch(() => {});
     }
-    
+
     let html = '';
-    const findHtml = (p) => { if(p.mimeType==='text/html' && p.body?.data) html = atob(p.body.data.replace(/-/g,'+').replace(/_/g,'/')); else p.parts?.forEach(findHtml); };
+    const findHtml = (p) => {
+      if (p.mimeType === 'text/html' && p.body?.data) {
+        html = atob(p.body.data.replace(/-/g, '+').replace(/_/g, '/'));
+      } else p.parts?.forEach(findHtml);
+    };
     findHtml(msg.payload);
-    if(!html) { const plain = msg.payload.parts?.find(p=>p.mimeType==='text/plain')?.body?.data; html = plain ? '<pre style="white-space:pre-wrap;font-family:inherit">'+escHtml(atob(plain.replace(/-/g,'+').replace(/_/g,'/')))+'</pre>' : 'Kosong'; }
-    
+
+    if (!html) {
+      let plain = '';
+      const findPlain = (p) => {
+        if (p.mimeType === 'text/plain' && p.body?.data) plain = atob(p.body.data.replace(/-/g, '+').replace(/_/g, '/'));
+        else p.parts?.forEach(findPlain);
+      };
+      findPlain(msg.payload);
+      html = plain ? `<pre style="white-space:pre-wrap;font-family:inherit;font-size:14px;line-height:1.7">${escHtml(plain)}</pre>` : '<p style="color:var(--text3)">Konten kosong</p>';
+    }
+
+    let dateDisplay = '';
+    try {
+      const d = new Date(dateStr);
+      dateDisplay = d.toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    } catch(e) {}
+
     document.getElementById('detailBody').innerHTML = `
       <div class="detail-header">
         <div class="detail-subject">${escHtml(sub)}</div>
         <div class="detail-meta">
-          <div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:${colorFor(fromName)};color:#fff;font-weight:700">${initials(fromName)}</div>
-          <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:15px">${escHtml(fromName)}</div></div>
+          <div class="detail-sender-avatar" style="background:linear-gradient(135deg,${colorFor(fromName)},${colorFor(fromEmail)})">${initials(fromName)}</div>
+          <div class="detail-sender-info">
+            <div class="detail-sender-name">${escHtml(fromName)}</div>
+            <div class="detail-sender-email">${escHtml(fromEmail)}</div>
+          </div>
+          <div style="text-align:right;font-size:11px;color:var(--text3)">${escHtml(dateDisplay)}</div>
         </div>
       </div>
-      <div class="detail-content">${html}</div>
-    `;
-  } catch(e) { document.getElementById('detailBody').innerHTML = '<p style="color:var(--red);text-align:center;padding:20px">Gagal memuat email</p>'; }
+      <div class="detail-content">${html}</div>`;
+  } catch(e) {
+    document.getElementById('detailBody').innerHTML = '<p style="color:var(--red);text-align:center;padding:40px">Gagal memuat email</p>';
+  }
 }
-function closeDetail() { document.getElementById('detailView').classList.remove('show'); currentMsgId=null; }
 
+function closeDetail() { document.getElementById('detailView').classList.remove('show'); currentMsgId = null; }
+
+async function toggleStarCurrent() {
+  if (!currentMsgId) return;
+  const btn = document.getElementById('btnStar');
+  const isStarred = btn.classList.contains('active-action');
+  btn.classList.toggle('active-action');
+  try {
+    await gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${currentMsgId}/modify`, {
+      method: 'POST',
+      body: JSON.stringify(isStarred ? { removeLabelIds: ['STARRED'] } : { addLabelIds: ['STARRED'] })
+    });
+    showToast(isStarred ? 'Bintang dihapus' : '⭐ Ditandai bintang');
+  } catch(e) { btn.classList.toggle('active-action'); }
+}
+
+function archiveCurrent() {
+  if (!currentMsgId) return;
+  gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${currentMsgId}/modify`, {
+    method: 'POST', body: JSON.stringify({ removeLabelIds: ['INBOX'] })
+  }).then(() => { showToast('Diarsipkan'); closeDetail(); fetchMessages(currentLabel); }).catch(() => showToast('Gagal'));
+}
+
+function trashCurrent() {
+  if (!currentMsgId) return;
+  gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${currentMsgId}/trash`, {
+    method: 'POST', body: '{}'
+  }).then(() => { showToast('Dihapus'); closeDetail(); fetchMessages(currentLabel); }).catch(() => showToast('Gagal'));
+}
+
+// ─────────────────────────────────────────────────────────────────────
+//  NAVIGATION
+// ─────────────────────────────────────────────────────────────────────
 function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('show'); }
 function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('show'); }
 
-function navTo(l, el) { 
-  if(el){ document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('active')); el.classList.add('active'); }
-  document.getElementById('categoryTabs').style.display = l === 'INBOX' ? 'flex' : 'none';
-  
-  if (l === 'INBOX') {
-    document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
-    document.querySelector('.cat-tab[data-category="primary"]')?.classList.add('active');
-    fetchMessages('CATEGORY:primary');
-  } else {
-    fetchMessages(l); 
+function navTo(l, el) {
+  if (el) {
+    document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
   }
-  closeSidebar(); 
+  const tabs = document.getElementById('categoryTabs');
+  tabs.style.display = l === 'INBOX' ? 'flex' : 'none';
+
+  if (l === 'INBOX') {
+    // ✅ FIX: Gunakan category tab yang aktif, bukan label INBOX mentah
+    const activeCat = document.querySelector('.cat-tab.active')?.dataset.category || 'primary';
+    currentCategory = activeCat;
+    fetchMessages('CATEGORY:' + activeCat);
+  } else {
+    fetchMessages(l);
+  }
+  closeSidebar();
 }
 
 function navToCategory(cat, el) {
-  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
   document.querySelector(`.cat-tab[data-category="${cat}"]`)?.classList.add('active');
-  fetchMessages('CATEGORY:'+cat); closeSidebar();
+  currentCategory = cat;
+  fetchMessages('CATEGORY:' + cat);
+  closeSidebar();
 }
-function switchCategory(cat, el) {
-  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active')); el.classList.add('active');
-  fetchMessages('CATEGORY:'+cat);
-}
-function setNav(el) { document.querySelectorAll('.bottom-nav .nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); }
 
+function switchCategory(cat, el) {
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  currentCategory = cat;
+  fetchMessages('CATEGORY:' + cat);
+}
+
+function setNav(el) { document.querySelectorAll('.bottom-nav .nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); }
+
+// ─────────────────────────────────────────────────────────────────────
+//  SEARCH
+// ─────────────────────────────────────────────────────────────────────
+function openSearch() { document.getElementById('searchView').classList.add('show'); setTimeout(() => document.getElementById('searchInput').focus(), 300); }
+function closeSearch() { document.getElementById('searchView').classList.remove('show'); document.getElementById('searchInput').value = ''; document.getElementById('searchResults').innerHTML = ''; }
+
+let searchDebounce;
+function handleSearch(q) {
+  clearTimeout(searchDebounce);
+  if (!q.trim()) return document.getElementById('searchResults').innerHTML = '';
+  searchDebounce = setTimeout(async () => {
+    document.getElementById('searchResults').innerHTML = '<p style="text-align:center;padding:30px;color:var(--text3)">Mencari...</p>';
+    try {
+      const data = await gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=15&q=${encodeURIComponent(q)}`);
+      if (!data.messages) { document.getElementById('searchResults').innerHTML = '<p style="text-align:center;padding:30px;color:var(--text3)">Tidak ditemukan</p>'; return; }
+      const msgs = await Promise.all(data.messages.map(m =>
+        gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject`)
+      ));
+      let html = '';
+      msgs.forEach(msg => {
+        const from = (msg.payload.headers.find(h => h.name === 'From')?.value || '').split('<')[0].replace(/"/g, '').trim();
+        const sub = msg.payload.headers.find(h => h.name === 'Subject')?.value || '(Tanpa subjek)';
+        const isUnread = msg.labelIds?.includes('UNREAD');
+        html += `<div style="padding:14px 12px;border-bottom:1px solid var(--border);cursor:pointer;border-radius:12px;margin-bottom:4px;background:var(--surface)" onclick="closeSearch();openDetail('${msg.id}')">
+          <div style="font-weight:${isUnread ? '700' : '500'};font-size:14px;margin-bottom:3px">${escHtml(from)}</div>
+          <div style="font-size:13px;color:var(--text2);font-weight:${isUnread ? '600' : '400'}">${escHtml(sub)}</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(msg.snippet)}</div>
+        </div>`;
+      });
+      document.getElementById('searchResults').innerHTML = html;
+    } catch(e) { document.getElementById('searchResults').innerHTML = '<p style="text-align:center;padding:30px;color:var(--red)">Gagal mencari</p>'; }
+  }, 500);
+}
+
+// ─────────────────────────────────────────────────────────────────────
+//  COMPOSE
+// ─────────────────────────────────────────────────────────────────────
 function openCompose() { document.getElementById('composeView').classList.add('show'); closeSidebar(); }
 function closeCompose() { document.getElementById('composeView').classList.remove('show'); }
 function validateCompose() { document.getElementById('composeSendBtn').disabled = !document.getElementById('composeTo').value.trim(); }
+
 async function sendEmail() {
   const to = document.getElementById('composeTo').value.trim();
   const sub = document.getElementById('composeSubject').value.trim();
   const body = document.getElementById('composeBody').innerText;
-  if(!to) return;
-  const raw = btoa(unescape(encodeURIComponent(`To: ${to}\r\nSubject: ${sub}\r\n\r\n${body}`))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-  document.getElementById('composeSendBtn').disabled = true;
+  if (!to) return;
+  const raw = btoa(unescape(encodeURIComponent(`To: ${to}\r\nSubject: ${sub || '(Tanpa subjek)'}\r\n\r\n${body}`)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const btn = document.getElementById('composeSendBtn');
+  btn.disabled = true;
+  btn.textContent = 'Mengirim...';
   try {
-    await gFetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', { method: 'POST', body: JSON.stringify({ raw }) });
-    showToast('Terkirim!'); closeCompose();
-    document.getElementById('composeTo').value=''; document.getElementById('composeSubject').value=''; document.getElementById('composeBody').innerText='';
-  } catch(e) { showToast('Gagal mengirim'); }
+    await gFetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+      method: 'POST', body: JSON.stringify({ raw })
+    });
+    showToast('✅ Terkirim!');
+    closeCompose();
+    document.getElementById('composeTo').value = '';
+    document.getElementById('composeSubject').value = '';
+    document.getElementById('composeBody').innerText = '';
+  } catch(e) {
+    showToast('Gagal mengirim');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Kirim';
+    validateCompose();
+  }
 }
 
+// ─────────────────────────────────────────────────────────────────────
+//  SETTINGS
+// ─────────────────────────────────────────────────────────────────────
 function openSettings() { document.getElementById('settingsView').classList.add('show'); }
 function closeSettings() { document.getElementById('settingsView').classList.remove('show'); }
+
+// ─────────────────────────────────────────────────────────────────────
+//  BACKGROUND POLL
+// ─────────────────────────────────────────────────────────────────────
+let lastUnreadCount = null;
+setInterval(() => {
+  if (activeEmail && sessions[activeEmail]) checkBackgroundEmail();
+}, 60000);
+
+async function checkBackgroundEmail() {
+  try {
+    const data = await gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages?q=in:inbox is:unread&maxResults=1`);
+    const current = data.resultSizeEstimate || 0;
+    if (lastUnreadCount !== null && current > lastUnreadCount && Notification.permission === "granted") {
+      new Notification("Mail Bespoke", { body: "Anda memiliki pesan masuk baru.", icon: "https://cdn-icons-png.flaticon.com/512/281/281769.png" });
+      fetchMessages(currentLabel);
+    }
+    lastUnreadCount = current;
+  } catch(e) {}
+}
 </script>
 </body>
 </html>
