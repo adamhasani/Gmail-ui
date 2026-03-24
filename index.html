@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#D4522A" id="themeColor">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mail Bespoke">
 <meta name="description" content="Mail Bespoke - Email client eksklusif dengan tampilan premium">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -34,33 +35,27 @@
 }
 html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overscroll-behavior:none;-webkit-font-smoothing:antialiased;transition:background .4s var(--transition),color .4s var(--transition)}
 
-/* ── Scrollbar ── */
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:var(--text3)}
 
-/* ── App Shell ── */
 .app{display:flex;flex-direction:column;height:100dvh;max-width:430px;margin:0 auto;position:relative;background:var(--bg);overflow:hidden}
 
-/* ── Animations ── */
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-@keyframes slideInRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes scaleIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 @keyframes glow{0%,100%{box-shadow:0 0 20px var(--accent-glow)}50%{box-shadow:0 0 40px var(--accent-glow)}}
+@keyframes float{0%,100%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(2%,2%) rotate(5deg)}}
 
 /* ── Login Screen ── */
 #loginScreen{position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;text-align:center}
 .login-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .login-bg::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 30%,var(--accent-glow) 0%,transparent 50%),radial-gradient(circle at 70% 70%,rgba(139,92,246,.1) 0%,transparent 50%);animation:float 20s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(2%,2%) rotate(5deg)}}
 .login-content{position:relative;z-index:1}
 .login-logo{width:80px;height:80px;border-radius:24px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;margin:0 auto 28px;box-shadow:0 12px 40px rgba(212,82,42,.4);animation:glow 3s ease-in-out infinite}
 .login-title{font-family:'DM Serif Display',serif;font-size:36px;margin-bottom:10px;color:var(--text);letter-spacing:-.5px}
@@ -72,23 +67,37 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .login-features{display:flex;gap:24px;margin-top:48px;color:var(--text3);font-size:12px}
 .login-feature{display:flex;align-items:center;gap:6px}
 
-/* ── PWA Install Banner ── */
-.pwa-banner{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface);color:var(--text);padding:14px 20px;border-radius:20px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:14px;z-index:90;box-shadow:var(--shadow-lg);border:1.5px solid var(--border);max-width:90%;transition:transform .4s var(--transition)}
-.pwa-banner.show{transform:translateX(-50%) translateY(0)}
-.pwa-banner.hidden{display:none}
-.pwa-icon{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.pwa-text{flex:1}
-.pwa-text strong{display:block;margin-bottom:2px}
-.pwa-text span{font-size:11px;color:var(--text3)}
-.pwa-install-btn{background:var(--accent);color:#fff;border:none;padding:10px 18px;border-radius:12px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
-.pwa-install-btn:active{transform:scale(.95)}
-.pwa-close{background:none;border:none;color:var(--text3);cursor:pointer;padding:4px}
+/* ── PWA Install Prompt (FIXED) ── */
+.pwa-prompt{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;background:var(--surface);border-radius:24px 24px 0 0;padding:24px;padding-bottom:40px;z-index:200;box-shadow:0 -8px 40px rgba(0,0,0,.15);transition:transform .4s var(--transition)}
+.pwa-prompt.show{transform:translateX(-50%) translateY(0)}
+.pwa-prompt-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
+.pwa-prompt-header{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.pwa-prompt-icon{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(212,82,42,.3)}
+.pwa-prompt-info h3{font-size:18px;font-weight:700;margin-bottom:4px}
+.pwa-prompt-info p{font-size:13px;color:var(--text3)}
+.pwa-prompt-features{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.pwa-feature{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);background:var(--surface2);padding:8px 12px;border-radius:20px}
+.pwa-feature svg{color:var(--green)}
+.pwa-prompt-actions{display:flex;gap:12px}
+.pwa-btn{flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s;border:none}
+.pwa-btn.secondary{background:var(--surface2);color:var(--text)}
+.pwa-btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 16px rgba(212,82,42,.3)}
+.pwa-btn:active{transform:scale(.97)}
 
-/* ── Sidebar Overlay ── */
+/* iOS Safari Instruction */
+.pwa-ios-steps{margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+.pwa-ios-steps h4{font-size:14px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.pwa-ios-step{display:flex;align-items:center;gap:12px;padding:10px 0;font-size:13px;color:var(--text2)}
+.pwa-ios-step .step-num{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pwa-ios-step svg{color:var(--blue);flex-shrink:0}
+
+.pwa-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;opacity:0;pointer-events:none;transition:opacity .3s}
+.pwa-overlay.show{opacity:1;pointer-events:auto}
+
+/* ── Sidebar ── */
 .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:40;opacity:0;pointer-events:none;transition:opacity .3s}
 .sidebar-overlay.show{opacity:1;pointer-events:auto}
 
-/* ── Sidebar ── */
 .sidebar{position:fixed;left:50%;margin-left:-215px;top:0;bottom:0;width:var(--sidebar-w);background:var(--surface);z-index:45;transform:translateX(-100%);transition:transform .35s var(--transition);display:flex;flex-direction:column;box-shadow:4px 0 30px rgba(0,0,0,.15)}
 .sidebar.open{transform:translateX(0)}
 @media(min-width:431px){.sidebar{margin-left:calc(-215px)}}
@@ -100,8 +109,8 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .sidebar-brand span{font-size:11px;color:var(--text3);font-weight:500}
 
 .sidebar-compose{padding:16px 16px 8px}
-.compose-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 20px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:14px;font-weight:600;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(212,82,42,.35);transition:all .2s}
-.compose-btn:active{transform:scale(.97);box-shadow:0 2px 8px rgba(212,82,42,.3)}
+.compose-sidebar-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 20px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:14px;font-weight:600;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(212,82,42,.35);transition:all .2s}
+.compose-sidebar-btn:active{transform:scale(.97);box-shadow:0 2px 8px rgba(212,82,42,.3)}
 
 .sidebar-nav{flex:1;overflow-y:auto;padding:8px 0}
 .nav-section{padding:8px 12px}
@@ -113,7 +122,6 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .nav-link svg{flex-shrink:0;transition:stroke .2s}
 .nav-link .badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;min-width:20px;text-align:center}
 .nav-link .badge.muted{background:var(--surface2);color:var(--text3)}
-
 .nav-divider{height:1px;background:var(--border);margin:8px 16px}
 
 .sidebar-footer{padding:12px;border-top:1px solid var(--border)}
@@ -152,11 +160,6 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .cat-tab.cat-updates.active{background:var(--orange)}
 .cat-tab .cat-icon{width:16px;height:16px;border-radius:4px;display:flex;align-items:center;justify-content:center}
 
-/* ── Pull to Refresh ── */
-.ptr-indicator{position:absolute;top:0;left:50%;transform:translateX(-50%);padding:12px;opacity:0;transition:all .3s;z-index:5}
-.ptr-indicator.pulling{opacity:1;transform:translateX(-50%) translateY(10px)}
-.ptr-indicator.refreshing svg{animation:spin .8s linear infinite}
-
 /* ── Mail List ── */
 .mail-list{flex:1;overflow-y:auto;padding:0 10px 100px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .mail-list::-webkit-scrollbar{display:none}
@@ -166,13 +169,12 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .empty-state h3{font-size:18px;font-weight:600;margin-bottom:8px;color:var(--text)}
 .empty-state p{font-size:14px;color:var(--text3);line-height:1.6}
 
-/* ── Loading Skeleton ── */
 .loading-skeleton{padding:0 4px}
 .skel-item{display:flex;gap:12px;background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:8px}
 .skel-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(90deg,var(--surface2) 25%,var(--surface3) 50%,var(--surface2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;flex-shrink:0}
 .skel-body{flex:1}
 .skel-line{height:12px;border-radius:6px;background:linear-gradient(90deg,var(--surface2) 25%,var(--surface3) 50%,var(--surface2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;margin-bottom:10px}
-.skel-line.w60{width:60%} .skel-line.w80{width:80%} .skel-line.w40{width:40%}
+.skel-line.w60{width:60%}.skel-line.w80{width:80%}.skel-line.w40{width:40%}
 
 /* ── Mail Item ── */
 .mail-item{display:flex;align-items:flex-start;gap:12px;background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:8px;border:1.5px solid transparent;box-shadow:0 1px 3px rgba(0,0,0,.03);cursor:pointer;transition:all .2s var(--transition);position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;animation:slideIn .35s ease both}
@@ -180,11 +182,10 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .mail-item.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:4px 0 0 4px}
 .mail-item:hover{border-color:var(--border);box-shadow:0 4px 12px rgba(0,0,0,.06)}
 .mail-item:active{transform:scale(.985);background:var(--surface2)}
-.mail-item.swiping{transition:none}
 
 .mail-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;color:#fff;overflow:hidden;position:relative}
 .mail-avatar.has-logo{background:var(--surface);border:1.5px solid var(--border)}
-.mail-avatar.has-logo img{width:55%;height:55%;object-fit:contain}
+.mail-avatar.has-logo img{width:24px;height:24px;object-fit:contain}
 .mail-avatar .online-dot{position:absolute;bottom:2px;right:2px;width:10px;height:10px;border-radius:50%;background:var(--green);border:2px solid var(--surface)}
 
 .mail-body{flex:1;min-width:0}
@@ -207,12 +208,6 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .mail-tag.label-yellow{background:rgba(234,179,8,.15);color:#B45309}
 .mail-attachment{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)}
 
-/* ── Swipe Actions ── */
-.swipe-actions{position:absolute;top:0;bottom:0;display:flex;align-items:center;justify-content:center;padding:0 20px;color:#fff;font-size:12px;font-weight:600;opacity:0;transition:opacity .2s}
-.swipe-actions.left{left:0;background:var(--green)}
-.swipe-actions.right{right:0;background:var(--red)}
-.swipe-actions svg{margin-bottom:4px}
-
 /* ── Bottom Nav ── */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:var(--tab-h);background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-around;padding:0 8px;z-index:15}
 .nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:1;padding:8px 4px;cursor:pointer;color:var(--text3);transition:all .2s;-webkit-tap-highlight-color:transparent;position:relative}
@@ -222,7 +217,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .nav-label{font-size:10px;font-weight:600;letter-spacing:.02em}
 .nav-badge{position:absolute;top:2px;right:50%;transform:translateX(calc(50% + 14px));background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center;animation:scaleIn .3s ease}
 
-/* ── FAB Compose ── */
+/* ── FAB ── */
 .fab-compose{position:fixed;bottom:80px;right:calc(50% - 195px);width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;box-shadow:0 6px 24px rgba(212,82,42,.45);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:16;transition:all .3s var(--transition)}
 .fab-compose:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(212,82,42,.5)}
 .fab-compose:active{transform:scale(.9)}
@@ -267,16 +262,12 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .detail-content a{color:var(--accent);text-decoration:none}
 .detail-content a:hover{text-decoration:underline}
 .detail-content blockquote{border-left:3px solid var(--border);padding-left:16px;margin:16px 0;color:var(--text3)}
-.detail-content pre{background:var(--surface2);padding:12px;border-radius:8px;overflow-x:auto;font-size:13px}
-.detail-content code{background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:13px}
 
-/* ── Detail Actions Bar ── */
 .detail-actions-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;padding:12px 16px;background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--glass-border);display:flex;gap:10px;z-index:31}
 .detail-actions-bar.hidden{display:none}
 .action-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:12px;background:var(--surface2);border:none;font-size:13px;font-weight:600;font-family:inherit;color:var(--text);cursor:pointer;transition:all .2s}
 .action-btn:active{transform:scale(.95);background:var(--surface3)}
 .action-btn.primary{background:var(--accent);color:#fff}
-.action-btn.primary:active{background:var(--accent2)}
 
 /* ── Search View ── */
 .search-view{position:fixed;inset:0;width:100%;background:var(--bg);z-index:35;display:flex;flex-direction:column;max-width:430px;left:50%;transform:translateX(-50%) translateY(-100%);transition:transform .35s var(--transition);opacity:1}
@@ -297,7 +288,6 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .search-recent-item:last-child{border-bottom:none}
 .search-recent-item svg{color:var(--text3)}
 .search-recent-item span{flex:1;font-size:14px;color:var(--text)}
-.search-recent-item .remove{color:var(--text3);padding:4px}
 
 /* ── Compose View ── */
 .compose-view{position:fixed;inset:0;width:100%;background:var(--bg);z-index:40;display:flex;flex-direction:column;max-width:430px;left:50%;transform:translateX(-50%) translateY(100%);transition:transform .35s var(--transition)}
@@ -312,7 +302,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 
 .compose-body{flex:1;overflow-y:auto;display:flex;flex-direction:column}
 .compose-field{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border)}
-.compose-field label{width:50px;font-size:13px;color:var(--text3);font-weight:500}
+.compose-field label{width:60px;font-size:13px;color:var(--text3);font-weight:500}
 .compose-field input{flex:1;background:none;border:none;outline:none;font-size:14px;font-family:inherit;color:var(--text)}
 .compose-field input::placeholder{color:var(--text3)}
 .compose-field.subject{background:var(--surface2)}
@@ -327,15 +317,6 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .toolbar-btn:hover{background:var(--surface2);color:var(--text)}
 .toolbar-btn:active{transform:scale(.9)}
 .toolbar-divider{width:1px;background:var(--border);margin:0 4px}
-
-.compose-attachments{padding:12px 16px;border-top:1px solid var(--border);display:none}
-.compose-attachments.has-files{display:block}
-.attachment-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--surface2);border-radius:10px;margin-bottom:8px}
-.attachment-icon{width:36px;height:36px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center}
-.attachment-info{flex:1;min-width:0}
-.attachment-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.attachment-size{font-size:11px;color:var(--text3)}
-.attachment-remove{background:none;border:none;color:var(--text3);cursor:pointer;padding:6px}
 
 /* ── Settings View ── */
 .settings-view{position:fixed;inset:0;width:100%;background:var(--bg);z-index:38;display:flex;flex-direction:column;max-width:430px;left:50%;transform:translateX(-50%) translateX(100%);transition:transform .35s var(--transition)}
@@ -362,35 +343,10 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .settings-desc{font-size:12px;color:var(--text3)}
 .settings-value{font-size:13px;color:var(--text3);margin-right:4px}
 
-/* ── Toggle Switch ── */
 .toggle{width:48px;height:28px;background:var(--border);border-radius:14px;position:relative;cursor:pointer;transition:background .3s}
 .toggle.active{background:var(--accent)}
 .toggle::after{content:'';position:absolute;left:3px;top:3px;width:22px;height:22px;background:#fff;border-radius:50%;transition:transform .3s var(--transition);box-shadow:0 2px 4px rgba(0,0,0,.2)}
 .toggle.active::after{transform:translateX(20px)}
-
-/* ── Modal & Toast ── */
-.toast{position:fixed;bottom:calc(var(--tab-h) + 24px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:12px 24px;border-radius:14px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:all .3s var(--transition);pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,.3)}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast.success{background:var(--green)}
-.toast.error{background:var(--red)}
-.toast-undo{background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;margin-left:4px}
-
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;padding:24px;max-width:430px;left:50%;transform:translateX(-50%);opacity:0;pointer-events:none;transition:opacity .25s}
-.modal-overlay.show{opacity:1;pointer-events:auto}
-.modal-box{background:var(--surface);border-radius:20px;padding:24px;width:100%;max-width:320px;box-shadow:var(--shadow-lg);transform:scale(.9);transition:transform .25s var(--transition)}
-.modal-overlay.show .modal-box{transform:scale(1)}
-.modal-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
-.modal-icon.warning{background:rgba(234,179,8,.12);color:var(--yellow)}
-.modal-icon.danger{background:rgba(239,68,68,.12);color:var(--red)}
-.modal-icon.success{background:rgba(34,197,94,.12);color:var(--green)}
-.modal-title{font-size:18px;font-weight:700;text-align:center;margin-bottom:8px}
-.modal-text{font-size:14px;color:var(--text2);text-align:center;line-height:1.6;margin-bottom:24px}
-.modal-actions{display:flex;gap:10px}
-.modal-btn{flex:1;padding:14px;border-radius:14px;border:none;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s}
-.modal-btn:active{transform:scale(.97)}
-.modal-btn.cancel{background:var(--surface2);color:var(--text)}
-.modal-btn.danger{background:var(--red);color:#fff}
-.modal-btn.primary{background:var(--accent);color:#fff}
 
 /* ── Account Picker Modal ── */
 .account-modal{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;max-width:430px;left:50%;transform:translateX(-50%);pointer-events:none}
@@ -415,13 +371,31 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .add-account-btn:hover{background:var(--accent-soft)}
 .add-account-btn .icon{width:44px;height:44px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--text3)}
 
-/* ── Keyboard Shortcuts Modal ── */
-.shortcuts-grid{display:grid;gap:12px}
-.shortcut-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
-.shortcut-keys{display:flex;gap:4px}
-.shortcut-key{background:var(--surface2);padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600;font-family:monospace}
+/* ── Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;padding:24px;max-width:430px;left:50%;transform:translateX(-50%);opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.show{opacity:1;pointer-events:auto}
+.modal-box{background:var(--surface);border-radius:20px;padding:24px;width:100%;max-width:320px;box-shadow:var(--shadow-lg);transform:scale(.9);transition:transform .25s var(--transition)}
+.modal-overlay.show .modal-box{transform:scale(1)}
+.modal-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.modal-icon.warning{background:rgba(234,179,8,.12);color:var(--yellow)}
+.modal-icon.danger{background:rgba(239,68,68,.12);color:var(--red)}
+.modal-icon.success{background:rgba(34,197,94,.12);color:var(--green)}
+.modal-title{font-size:18px;font-weight:700;text-align:center;margin-bottom:8px}
+.modal-text{font-size:14px;color:var(--text2);text-align:center;line-height:1.6;margin-bottom:24px}
+.modal-actions{display:flex;gap:10px}
+.modal-btn{flex:1;padding:14px;border-radius:14px;border:none;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s}
+.modal-btn:active{transform:scale(.97)}
+.modal-btn.cancel{background:var(--surface2);color:var(--text)}
+.modal-btn.danger{background:var(--red);color:#fff}
+.modal-btn.primary{background:var(--accent);color:#fff}
 
-/* ── Snackbar Undo ── */
+/* ── Toast ── */
+.toast{position:fixed;bottom:calc(var(--tab-h) + 24px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:12px 24px;border-radius:14px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:all .3s var(--transition);pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{background:var(--green)}
+.toast.error{background:var(--red)}
+
+/* ── Snackbar ── */
 .snackbar{position:fixed;bottom:calc(var(--tab-h) + 20px);left:50%;transform:translateX(-50%) translateY(100px);background:var(--text);color:var(--bg);padding:14px 20px;border-radius:14px;display:flex;align-items:center;gap:14px;z-index:200;box-shadow:var(--shadow-lg);transition:transform .35s var(--transition)}
 .snackbar.show{transform:translateX(-50%) translateY(0)}
 .snackbar-text{flex:1;font-size:13px;font-weight:500}
@@ -454,19 +428,63 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
   </div>
 </div>
 
-<!-- PWA Install Banner -->
-<div class="pwa-banner" id="pwaBanner">
-  <div class="pwa-icon">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+<!-- PWA Install Prompt - IMPROVED -->
+<div class="pwa-overlay" id="pwaOverlay" onclick="closePWAPrompt()"></div>
+<div class="pwa-prompt" id="pwaPrompt">
+  <div class="pwa-prompt-handle"></div>
+  <div class="pwa-prompt-header">
+    <div class="pwa-prompt-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    </div>
+    <div class="pwa-prompt-info">
+      <h3>Install Mail Bespoke</h3>
+      <p>Akses lebih cepat dari home screen</p>
+    </div>
   </div>
-  <div class="pwa-text">
-    <strong>Install Mail Bespoke</strong>
-    <span>Akses cepat dari home screen</span>
+  <div class="pwa-prompt-features">
+    <div class="pwa-feature">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      Akses Offline
+    </div>
+    <div class="pwa-feature">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      Notifikasi Push
+    </div>
+    <div class="pwa-feature">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      Fullscreen Mode
+    </div>
   </div>
-  <button class="pwa-install-btn" onclick="installPWA()">Install</button>
-  <button class="pwa-close" onclick="closePWABanner()">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-  </button>
+  
+  <!-- iOS Safari Instructions -->
+  <div class="pwa-ios-steps" id="pwaIOSSteps" style="display:none">
+    <h4>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      Cara Install di iPhone/iPad:
+    </h4>
+    <div class="pwa-ios-step">
+      <span class="step-num">1</span>
+      <span>Ketuk tombol</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+      <span>Share di Safari</span>
+    </div>
+    <div class="pwa-ios-step">
+      <span class="step-num">2</span>
+      <span>Scroll & pilih "Add to Home Screen"</span>
+    </div>
+    <div class="pwa-ios-step">
+      <span class="step-num">3</span>
+      <span>Ketuk "Add" di pojok kanan atas</span>
+    </div>
+  </div>
+  
+  <div class="pwa-prompt-actions" id="pwaActions">
+    <button class="pwa-btn secondary" onclick="closePWAPrompt()">Nanti Saja</button>
+    <button class="pwa-btn primary" id="pwaInstallBtn" onclick="installPWA()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Install Sekarang
+    </button>
+  </div>
 </div>
 
 <!-- Main App -->
@@ -488,7 +506,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
     </div>
     
     <div class="sidebar-compose">
-      <button class="compose-btn" onclick="openCompose()">
+      <button class="compose-sidebar-btn" onclick="openCompose()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Tulis Email
       </button>
@@ -504,10 +522,6 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
         <div class="nav-link" data-label="STARRED" onclick="navTo('STARRED', this)">
           <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           Berbintang
-        </div>
-        <div class="nav-link" data-label="SNOOZED" onclick="navTo('SNOOZED', this)">
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Ditunda
         </div>
         <div class="nav-link" data-label="IMPORTANT" onclick="navTo('IMPORTANT', this)">
           <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
@@ -545,7 +559,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
           Promosi
         </div>
         <div class="nav-link" data-category="updates" onclick="navToCategory('updates', this)">
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#F97316" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#F97316" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           Update
         </div>
       </div>
@@ -572,7 +586,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
           <div class="sidebar-account-email" id="sidebarEmail">user@gmail.com</div>
         </div>
         <button class="sidebar-settings" onclick="event.stopPropagation();openSettings()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
         </button>
       </div>
     </div>
@@ -580,7 +594,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 
   <!-- Top Bar -->
   <div class="topbar">
-    <button class="menu-btn" onclick="openSidebar()" aria-label="Menu">
+    <button class="menu-btn" onclick="openSidebar()">
       <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
     <div class="topbar-search" onclick="openSearch()">
@@ -588,7 +602,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
       <span>Cari email...</span>
       <kbd>⌘K</kbd>
     </div>
-    <button class="topbar-btn" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+    <button class="topbar-btn" onclick="toggleDarkMode()">
       <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" id="themeIcon"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
     </button>
     <div class="account-switcher" id="accountList"></div>
@@ -614,15 +628,10 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
     </div>
   </div>
 
-  <!-- Pull to Refresh Indicator -->
-  <div class="ptr-indicator" id="ptrIndicator">
-    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="var(--accent)" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
-  </div>
-
   <div class="mail-list" id="mailList"></div>
 
-  <!-- FAB Compose -->
-  <button class="fab-compose" onclick="openCompose()" aria-label="Compose email">
+  <!-- FAB -->
+  <button class="fab-compose" onclick="openCompose()">
     <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
   </button>
 
@@ -642,7 +651,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
       <span class="nav-label">Bintang</span>
     </div>
     <div class="nav-item" onclick="openSettings()">
-      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
       <span class="nav-label">Setelan</span>
     </div>
   </div>
@@ -651,22 +660,19 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 <!-- Detail View -->
 <div class="detail-view" id="detailView">
   <div class="detail-topbar">
-    <button class="back-btn" onclick="closeDetail()" aria-label="Back">
+    <button class="back-btn" onclick="closeDetail()">
       <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
     </button>
     <span class="detail-title-bar" id="detailTitleBar">Email</span>
     <div class="detail-action-btns">
-      <button class="detail-action-btn" id="btnStar" onclick="toggleStarCurrent()" aria-label="Star">
+      <button class="detail-action-btn" id="btnStar" onclick="toggleStarCurrent()">
         <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       </button>
-      <button class="detail-action-btn" onclick="archiveCurrent()" aria-label="Archive">
+      <button class="detail-action-btn" onclick="archiveCurrent()">
         <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
       </button>
-      <button class="detail-action-btn" onclick="trashCurrent()" aria-label="Delete">
+      <button class="detail-action-btn" onclick="trashCurrent()">
         <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-      </button>
-      <button class="detail-action-btn" onclick="showMoreActions()" aria-label="More">
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
       </button>
     </div>
   </div>
@@ -688,7 +694,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
   <div class="search-header">
     <div class="search-input-wrap">
       <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="searchInput" placeholder="Cari email, pengirim, atau label..." oninput="handleSearch(this.value)">
+      <input type="text" id="searchInput" placeholder="Cari email..." oninput="handleSearch(this.value)" autofocus>
     </div>
     <button class="search-cancel" onclick="closeSearch()">Batal</button>
   </div>
@@ -697,7 +703,6 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
     <div class="search-filter" onclick="setSearchFilter('unread', this)">Belum Dibaca</div>
     <div class="search-filter" onclick="setSearchFilter('starred', this)">Berbintang</div>
     <div class="search-filter" onclick="setSearchFilter('attachments', this)">Lampiran</div>
-    <div class="search-filter" onclick="setSearchFilter('me', this)">Dari Saya</div>
   </div>
   <div class="search-results" id="searchResults">
     <div class="search-recent">
@@ -722,7 +727,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
   <div class="compose-body">
     <div class="compose-field">
       <label>Kepada</label>
-      <input type="email" id="composeTo" placeholder="alamat@email.com" oninput="validateCompose()">
+      <input type="email" id="composeTo" placeholder="email@example.com" oninput="validateCompose()">
     </div>
     <div class="compose-field">
       <label>Cc</label>
@@ -735,18 +740,14 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
     <div class="compose-editor">
       <div contenteditable="true" id="composeBody" data-placeholder="Tulis email Anda di sini..." oninput="validateCompose()"></div>
     </div>
-    <div class="compose-attachments" id="composeAttachments"></div>
   </div>
   <div class="compose-toolbar">
-    <button class="toolbar-btn" onclick="formatText('bold')" title="Bold"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6zM6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"/></svg></button>
-    <button class="toolbar-btn" onclick="formatText('italic')" title="Italic"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg></button>
-    <button class="toolbar-btn" onclick="formatText('underline')" title="Underline"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 3v7a6 6 0 006 6 6 6 0 006-6V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg></button>
+    <button class="toolbar-btn" onclick="formatText('bold')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6zM6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"/></svg></button>
+    <button class="toolbar-btn" onclick="formatText('italic')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg></button>
+    <button class="toolbar-btn" onclick="formatText('underline')"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 3v7a6 6 0 006 6 6 6 0 006-6V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg></button>
     <div class="toolbar-divider"></div>
-    <button class="toolbar-btn" onclick="formatText('insertUnorderedList')" title="Bullet list"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button>
-    <button class="toolbar-btn" onclick="insertLink()" title="Insert link"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></button>
-    <div class="toolbar-divider"></div>
-    <button class="toolbar-btn" onclick="attachFile()" title="Attach file"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg></button>
-    <button class="toolbar-btn" onclick="insertEmoji()" title="Emoji"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
+    <button class="toolbar-btn"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg></button>
+    <button class="toolbar-btn"><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
   </div>
 </div>
 
@@ -772,43 +773,6 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
           </div>
           <div class="toggle" id="darkModeToggle"></div>
         </div>
-        <div class="settings-item">
-          <div class="settings-icon blue">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg>
-          </div>
-          <div class="settings-info">
-            <div class="settings-name">Kepadatan Tampilan</div>
-            <div class="settings-desc">Atur jarak antar email</div>
-          </div>
-          <span class="settings-value">Normal</span>
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-      </div>
-    </div>
-    
-    <div class="settings-section">
-      <div class="settings-section-title">Notifikasi</div>
-      <div class="settings-card">
-        <div class="settings-item" onclick="toggleNotifications()">
-          <div class="settings-icon orange">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-          </div>
-          <div class="settings-info">
-            <div class="settings-name">Notifikasi Push</div>
-            <div class="settings-desc">Terima notifikasi email baru</div>
-          </div>
-          <div class="toggle" id="notifToggle"></div>
-        </div>
-        <div class="settings-item">
-          <div class="settings-icon cyan">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/><circle cx="12" cy="12" r="4"/></svg>
-          </div>
-          <div class="settings-info">
-            <div class="settings-name">Suara Notifikasi</div>
-            <div class="settings-desc">Bunyi saat email masuk</div>
-          </div>
-          <div class="toggle active"></div>
-        </div>
       </div>
     </div>
     
@@ -825,51 +789,30 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
           </div>
           <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
-        <div class="settings-item" onclick="showSignature()">
-          <div class="settings-icon blue">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
-          </div>
-          <div class="settings-info">
-            <div class="settings-name">Tanda Tangan</div>
-            <div class="settings-desc">Atur tanda tangan email</div>
-          </div>
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
       </div>
     </div>
     
     <div class="settings-section">
-      <div class="settings-section-title">Lainnya</div>
+      <div class="settings-section-title">Aplikasi</div>
       <div class="settings-card">
-        <div class="settings-item" onclick="showKeyboardShortcuts()">
-          <div class="settings-icon purple">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="6" y1="8" x2="6.01" y2="8"/><line x1="10" y1="8" x2="10.01" y2="8"/><line x1="14" y1="8" x2="14.01" y2="8"/><line x1="18" y1="8" x2="18.01" y2="8"/><line x1="8" y1="12" x2="8.01" y2="12"/><line x1="12" y1="12" x2="12.01" y2="12"/><line x1="16" y1="12" x2="16.01" y2="12"/><line x1="7" y1="16" x2="17" y2="16"/></svg>
+        <div class="settings-item" onclick="showPWAPrompt()">
+          <div class="settings-icon blue">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           </div>
           <div class="settings-info">
-            <div class="settings-name">Pintasan Keyboard</div>
-            <div class="settings-desc">Lihat semua pintasan</div>
+            <div class="settings-name">Install Aplikasi</div>
+            <div class="settings-desc">Pasang ke home screen</div>
           </div>
           <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
         <div class="settings-item">
-          <div class="settings-icon orange">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          </div>
-          <div class="settings-info">
-            <div class="settings-name">Bantuan</div>
-            <div class="settings-desc">FAQ dan panduan</div>
-          </div>
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-        <div class="settings-item" onclick="showAbout()">
           <div class="settings-icon cyan">
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </div>
           <div class="settings-info">
-            <div class="settings-name">Tentang Aplikasi</div>
+            <div class="settings-name">Tentang</div>
             <div class="settings-desc">Versi 1.0.0</div>
           </div>
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
       </div>
     </div>
@@ -904,7 +847,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 <!-- Modal -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal-box">
-    <div class="modal-icon warning" id="modalIcon">
+    <div class="modal-icon danger" id="modalIcon">
       <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
     </div>
     <div class="modal-title" id="modalTitle">Konfirmasi</div>
@@ -916,7 +859,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
   </div>
 </div>
 
-<!-- Snackbar with Undo -->
+<!-- Snackbar -->
 <div class="snackbar" id="snackbar">
   <span class="snackbar-text" id="snackbarText">Email diarsipkan</span>
   <button class="snackbar-action" id="snackbarAction" onclick="undoAction()">UNDO</button>
@@ -927,66 +870,43 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 
 <script>
 // ─────────────────────────────────────────────
-//  CONFIG & BRAND DATABASE
+//  CONFIG & BRANDS
 // ─────────────────────────────────────────────
 const CLIENT_ID = '150908117503-5bj62qlgafq2snd2boamiinq16adt4mp.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
 
-// Brand Logos - 80+ Brand
 const BRANDS = {
-  linkedin:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg',color:'#0A66C2',name:'LinkedIn'},
-  github:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg',color:'#181717',name:'GitHub'},
-  vercel:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/vercel.svg',color:'#000000',name:'Vercel'},
-  google:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/google.svg',color:'#4285F4',name:'Google'},
-  youtube:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg',color:'#FF0000',name:'YouTube'},
-  twitter:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg',color:'#000000',name:'X'},
-  facebook:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg',color:'#1877F2',name:'Facebook'},
-  instagram:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg',color:'#E4405F',name:'Instagram'},
-  whatsapp:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg',color:'#25D366',name:'WhatsApp'},
-  tiktok:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/tiktok.svg',color:'#000000',name:'TikTok'},
-  spotify:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/spotify.svg',color:'#1DB954',name:'Spotify'},
-  netflix:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/netflix.svg',color:'#E50914',name:'Netflix'},
-  amazon:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/amazon.svg',color:'#FF9900',name:'Amazon'},
-  apple:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/apple.svg',color:'#000000',name:'Apple'},
-  microsoft:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/microsoft.svg',color:'#5E5E5E',name:'Microsoft'},
-  slack:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/slack.svg',color:'#4A154B',name:'Slack'},
-  discord:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg',color:'#5865F2',name:'Discord'},
-  notion:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/notion.svg',color:'#000000',name:'Notion'},
-  figma:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/figma.svg',color:'#F24E1E',name:'Figma'},
-  dribbble:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/dribbble.svg',color:'#EA4C89',name:'Dribbble'},
-  medium:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/medium.svg',color:'#000000',name:'Medium'},
-  stripe:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/stripe.svg',color:'#635BFF',name:'Stripe'},
-  paypal:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/paypal.svg',color:'#00457C',name:'PayPal'},
-  shopee:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/shopee.svg',color:'#EE4D2D',name:'Shopee'},
-  tokopedia:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/tokopedia.svg',color:'#42B549',name:'Tokopedia'},
-  gojek:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/gojek.svg',color:'#00880F',name:'Gojek'},
-  grab:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/grab.svg',color:'#00B14F',name:'Grab'},
-  uber:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/uber.svg',color:'#000000',name:'Uber'},
-  airbnb:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/airbnb.svg',color:'#FF5A5F',name:'Airbnb'},
-  dropbox:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/dropbox.svg',color:'#0061FF',name:'Dropbox'},
-  zoom:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/zoom.svg',color:'#2D8CFF',name:'Zoom'},
-  trello:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/trello.svg',color:'#0052CC',name:'Trello'},
-  jira:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/jira.svg',color:'#0052CC',name:'Jira'},
-  canva:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/canva.svg',color:'#00C4CC',name:'Canva'},
-  adobe:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/adobe.svg',color:'#FF0000',name:'Adobe'},
-  pinterest:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/pinterest.svg',color:'#BD081C',name:'Pinterest'},
-  reddit:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/reddit.svg',color:'#FF4500',name:'Reddit'},
-  twitch:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twitch.svg',color:'#9146FF',name:'Twitch'},
-  steam:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/steam.svg',color:'#000000',name:'Steam'},
-  telegram:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/telegram.svg',color:'#26A5E4',name:'Telegram'},
-  cloudflare:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/cloudflare.svg',color:'#F38020',name:'Cloudflare'},
-  netlify:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/netlify.svg',color:'#00C7B7',name:'Netlify'},
-  supabase:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/supabase.svg',color:'#3ECF8E',name:'Supabase'},
-  firebase:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/firebase.svg',color:'#FFCA28',name:'Firebase'},
-  mongodb:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/mongodb.svg',color:'#47A248',name:'MongoDB'},
-  docker:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/docker.svg',color:'#2496ED',name:'Docker'},
-  gitlab:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/gitlab.svg',color:'#FC6D26',name:'GitLab'},
-  bitbucket:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/bitbucket.svg',color:'#0052CC',name:'Bitbucket'},
-  heroku:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/heroku.svg',color:'#430098',name:'Heroku'},
-  digitalocean:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/digitalocean.svg',color:'#0080FF',name:'DigitalOcean'},
-  aws:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/amazonaws.svg',color:'#232F3E',name:'AWS'},
-  openai:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/openai.svg',color:'#412991',name:'OpenAI'},
-  nvidia:{logo:'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/nvidia.svg',color:'#76B900',name:'NVIDIA'},
+  linkedin:{color:'#0A66C2',name:'LinkedIn'},
+  github:{color:'#181717',name:'GitHub'},
+  vercel:{color:'#000000',name:'Vercel'},
+  google:{color:'#4285F4',name:'Google'},
+  youtube:{color:'#FF0000',name:'YouTube'},
+  twitter:{color:'#000000',name:'X'},
+  facebook:{color:'#1877F2',name:'Facebook'},
+  instagram:{color:'#E4405F',name:'Instagram'},
+  whatsapp:{color:'#25D366',name:'WhatsApp'},
+  tiktok:{color:'#000000',name:'TikTok'},
+  spotify:{color:'#1DB954',name:'Spotify'},
+  netflix:{color:'#E50914',name:'Netflix'},
+  amazon:{color:'#FF9900',name:'Amazon'},
+  apple:{color:'#000000',name:'Apple'},
+  microsoft:{color:'#5E5E5E',name:'Microsoft'},
+  slack:{color:'#4A154B',name:'Slack'},
+  discord:{color:'#5865F2',name:'Discord'},
+  notion:{color:'#000000',name:'Notion'},
+  figma:{color:'#F24E1E',name:'Figma'},
+  stripe:{color:'#635BFF',name:'Stripe'},
+  paypal:{color:'#00457C',name:'PayPal'},
+  shopee:{color:'#EE4D2D',name:'Shopee'},
+  tokopedia:{color:'#42B549',name:'Tokopedia'},
+  grab:{color:'#00B14F',name:'Grab'},
+  gojek:{color:'#00880F',name:'Gojek'},
+  telegram:{color:'#26A5E4',name:'Telegram'},
+  zoom:{color:'#2D8CFF',name:'Zoom'},
+  dropbox:{color:'#0061FF',name:'Dropbox'},
+  netlify:{color:'#00C7B7',name:'Netlify'},
+  supabase:{color:'#3ECF8E',name:'Supabase'},
+  openai:{color:'#412991',name:'OpenAI'},
 };
 
 const DOMAIN_MAP = {
@@ -996,52 +916,30 @@ const DOMAIN_MAP = {
   'google.com':'google','accounts.google.com':'google','youtube.com':'youtube',
   'twitter.com':'twitter','x.com':'twitter',
   'facebook.com':'facebook','facebookmail.com':'facebook',
-  'instagram.com':'instagram','mail.instagram.com':'instagram',
+  'instagram.com':'instagram',
   'whatsapp.com':'whatsapp',
   'tiktok.com':'tiktok',
   'spotify.com':'spotify',
   'netflix.com':'netflix',
-  'amazon.com':'amazon','amazon.co.id':'amazon',
-  'apple.com':'apple','id.apple.com':'apple',
-  'microsoft.com':'microsoft','email.microsoft.com':'microsoft',
+  'amazon.com':'amazon',
+  'apple.com':'apple',
+  'microsoft.com':'microsoft',
   'slack.com':'slack',
   'discord.com':'discord','discordapp.com':'discord',
   'notion.so':'notion',
   'figma.com':'figma',
-  'dribbble.com':'dribbble',
-  'medium.com':'medium',
   'stripe.com':'stripe',
   'paypal.com':'paypal',
   'shopee.co.id':'shopee','shopee.com':'shopee',
   'tokopedia.com':'tokopedia',
-  'gojek.com':'gojek',
   'grab.com':'grab',
-  'uber.com':'uber',
-  'airbnb.com':'airbnb',
-  'dropbox.com':'dropbox',
-  'zoom.us':'zoom',
-  'trello.com':'trello',
-  'atlassian.com':'jira','jira.com':'jira',
-  'canva.com':'canva',
-  'adobe.com':'adobe',
-  'pinterest.com':'pinterest',
-  'reddit.com':'reddit','redditmail.com':'reddit',
-  'twitch.tv':'twitch',
-  'steampowered.com':'steam',
+  'gojek.com':'gojek',
   'telegram.org':'telegram',
-  'cloudflare.com':'cloudflare',
+  'zoom.us':'zoom',
+  'dropbox.com':'dropbox',
   'netlify.com':'netlify',
   'supabase.io':'supabase','supabase.com':'supabase',
-  'firebase.google.com':'firebase',
-  'mongodb.com':'mongodb',
-  'docker.com':'docker',
-  'gitlab.com':'gitlab',
-  'bitbucket.org':'bitbucket',
-  'heroku.com':'heroku',
-  'digitalocean.com':'digitalocean',
-  'amazonaws.com':'aws',
   'openai.com':'openai',
-  'nvidia.com':'nvidia',
 };
 
 // State
@@ -1053,10 +951,10 @@ let currentMsgId = null;
 let currentMsgData = null;
 let deferredPrompt = null;
 let unreadCount = 0;
-let searchFilter = 'all';
-let recentSearches = JSON.parse(localStorage.getItem('recent_searches') || '[]');
-let lastAction = null;
 let isDark = localStorage.getItem('dark_mode') === 'true';
+let lastAction = null;
+let isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+let isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
 // ─────────────────────────────────────────────
 //  INIT
@@ -1066,7 +964,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (isDark) {
     document.documentElement.setAttribute('data-theme', 'dark');
     document.getElementById('themeColor').content = '#18181B';
-    document.getElementById('darkModeToggle').classList.add('active');
+    document.getElementById('darkModeToggle')?.classList.add('active');
     updateThemeIcon();
   }
   
@@ -1079,40 +977,69 @@ window.addEventListener('DOMContentLoaded', () => {
     fetchMessages('INBOX');
   }
   
-  // Render recent searches
-  renderRecentSearches();
-  
   // Keyboard shortcuts
   document.addEventListener('keydown', handleKeyboard);
 });
 
-// PWA
+// ─────────────────────────────────────────────
+//  PWA INSTALL - FIXED
+// ─────────────────────────────────────────────
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  if (!localStorage.getItem('pwa_dismissed')) {
-    setTimeout(() => document.getElementById('pwaBanner').classList.add('show'), 3000);
+  
+  // Show prompt after 5 seconds if not dismissed
+  if (!localStorage.getItem('pwa_dismissed') && !isStandalone) {
+    setTimeout(() => showPWAPrompt(), 5000);
   }
 });
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
+function showPWAPrompt() {
+  if (isStandalone) {
+    showToast('✅ Aplikasi sudah terinstall!', 'success');
+    return;
+  }
+  
+  const prompt = document.getElementById('pwaPrompt');
+  const overlay = document.getElementById('pwaOverlay');
+  const iosSteps = document.getElementById('pwaIOSSteps');
+  const actions = document.getElementById('pwaActions');
+  const installBtn = document.getElementById('pwaInstallBtn');
+  
+  // Show iOS instructions if Safari
+  if (isIOS) {
+    iosSteps.style.display = 'block';
+    installBtn.style.display = 'none';
+    actions.innerHTML = `<button class="pwa-btn secondary" style="width:100%" onclick="closePWAPrompt()">Mengerti</button>`;
+  } else {
+    iosSteps.style.display = 'none';
+    installBtn.style.display = 'flex';
+  }
+  
+  prompt.classList.add('show');
+  overlay.classList.add('show');
+}
+
+function closePWAPrompt() {
+  document.getElementById('pwaPrompt').classList.remove('show');
+  document.getElementById('pwaOverlay').classList.remove('show');
+  localStorage.setItem('pwa_dismissed', 'true');
 }
 
 function installPWA() {
   if (deferredPrompt) {
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then((choice) => {
-      if (choice.outcome === 'accepted') showToast('🎉 Aplikasi terinstall!', 'success');
+      if (choice.outcome === 'accepted') {
+        showToast('🎉 Aplikasi berhasil diinstall!', 'success');
+      }
       deferredPrompt = null;
-      document.getElementById('pwaBanner').classList.remove('show');
+      closePWAPrompt();
     });
+  } else {
+    // Fallback for browsers that don't support beforeinstallprompt
+    showToast('Gunakan menu browser untuk install', 'error');
   }
-}
-
-function closePWABanner() {
-  document.getElementById('pwaBanner').classList.remove('show');
-  localStorage.setItem('pwa_dismissed', 'true');
 }
 
 // ─────────────────────────────────────────────
@@ -1121,55 +1048,28 @@ function closePWABanner() {
 function toggleDarkMode() {
   isDark = !isDark;
   localStorage.setItem('dark_mode', isDark);
-  
   document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '');
   document.getElementById('themeColor').content = isDark ? '#18181B' : '#D4522A';
-  document.getElementById('darkModeToggle').classList.toggle('active', isDark);
+  document.getElementById('darkModeToggle')?.classList.toggle('active', isDark);
   updateThemeIcon();
-  
-  showToast(isDark ? '🌙 Mode gelap aktif' : '☀️ Mode terang aktif');
+  showToast(isDark ? '🌙 Mode gelap' : '☀️ Mode terang');
 }
 
 function updateThemeIcon() {
   const icon = document.getElementById('themeIcon');
-  icon.innerHTML = isDark 
-    ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
-    : '<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
+  if (icon) {
+    icon.innerHTML = isDark 
+      ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+      : '<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
+  }
 }
 
 // ─────────────────────────────────────────────
-//  KEYBOARD SHORTCUTS
+//  KEYBOARD
 // ─────────────────────────────────────────────
 function handleKeyboard(e) {
-  // Cmd/Ctrl + K = Search
-  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-    e.preventDefault();
-    openSearch();
-  }
-  // Escape
-  if (e.key === 'Escape') {
-    closeSearch();
-    closeDetail();
-    closeCompose();
-    closeSettings();
-    closeModal();
-    closeAccountPicker();
-  }
-  // C = Compose
-  if (e.key === 'c' && !isTyping()) openCompose();
-  // R = Reply
-  if (e.key === 'r' && !isTyping() && currentMsgId) replyEmail();
-  // S = Star
-  if (e.key === 's' && !isTyping() && currentMsgId) toggleStarCurrent();
-  // E = Archive
-  if (e.key === 'e' && !isTyping() && currentMsgId) archiveCurrent();
-  // # = Delete
-  if (e.key === '#' && !isTyping() && currentMsgId) trashCurrent();
-}
-
-function isTyping() {
-  const el = document.activeElement;
-  return el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable;
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+  if (e.key === 'Escape') { closeSearch(); closeDetail(); closeCompose(); closeSettings(); closeModal(); closeAccountPicker(); closePWAPrompt(); }
 }
 
 // ─────────────────────────────────────────────
@@ -1188,16 +1088,11 @@ function closeSidebar() {
 function navTo(label, linkEl) {
   currentLabel = label;
   currentCategory = null;
-  
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
   if (linkEl) linkEl.classList.add('active');
-  
   document.getElementById('categoryTabs').style.display = label === 'INBOX' ? 'flex' : 'none';
-  
   closeSidebar();
   fetchMessages(label);
-  
-  // Update bottom nav
   document.querySelectorAll('.bottom-nav .nav-item').forEach(n => n.classList.remove('active'));
   if (label === 'INBOX') document.getElementById('navInbox').classList.add('active');
 }
@@ -1205,14 +1100,11 @@ function navTo(label, linkEl) {
 function navToCategory(cat, linkEl) {
   currentLabel = 'CATEGORY';
   currentCategory = cat;
-  
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
   if (linkEl) linkEl.classList.add('active');
-  
   document.getElementById('categoryTabs').style.display = 'flex';
   document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
   document.querySelector(`.cat-tab[data-category="${cat}"]`)?.classList.add('active');
-  
   closeSidebar();
   fetchMessages('CATEGORY:' + cat);
 }
@@ -1232,7 +1124,6 @@ function setNav(el) {
 function updateSidebarAccount() {
   if (!activeEmail || !sessions[activeEmail]) return;
   const acc = sessions[activeEmail];
-  
   const avatar = document.getElementById('sidebarAvatar');
   if (acc.picture) {
     avatar.innerHTML = `<img src="${acc.picture}" alt="">`;
@@ -1240,7 +1131,6 @@ function updateSidebarAccount() {
     avatar.textContent = (acc.name || acc.email || '?')[0].toUpperCase();
     avatar.style.background = `linear-gradient(135deg, ${colorFor(acc.name)}, #222)`;
   }
-  
   document.getElementById('sidebarName').textContent = acc.name || 'User';
   document.getElementById('sidebarEmail').textContent = acc.email;
 }
@@ -1250,9 +1140,10 @@ function updateSidebarAccount() {
 // ─────────────────────────────────────────────
 function handleLogin() {
   const loginBtn = document.getElementById('loginBtn');
-  const originalHTML = loginBtn.innerHTML;
-  loginBtn.innerHTML = '<div style="width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite"></div> Menghubungkan...';
-  loginBtn.disabled = true;
+  if (loginBtn) {
+    loginBtn.innerHTML = '<div style="width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite"></div> Menghubungkan...';
+    loginBtn.disabled = true;
+  }
   
   const client = google.accounts.oauth2.initCodeClient({
     client_id: CLIENT_ID,
@@ -1260,8 +1151,10 @@ function handleLogin() {
     ux_mode: 'popup',
     callback: async (response) => {
       if (response.error) {
-        loginBtn.innerHTML = originalHTML;
-        loginBtn.disabled = false;
+        if (loginBtn) {
+          loginBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> Masuk dengan Google';
+          loginBtn.disabled = false;
+        }
         return showToast('Login dibatalkan', 'error');
       }
       
@@ -1292,8 +1185,10 @@ function handleLogin() {
         showToast('✅ Login berhasil!', 'success');
       } catch(e) { 
         console.error(e);
-        loginBtn.innerHTML = originalHTML;
-        loginBtn.disabled = false;
+        if (loginBtn) {
+          loginBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> Masuk dengan Google';
+          loginBtn.disabled = false;
+        }
         showToast('Gagal login', 'error');
       }
     }
@@ -1304,10 +1199,8 @@ function handleLogin() {
 function switchAccount(email) {
   activeEmail = email;
   localStorage.setItem('mail_active_email', activeEmail);
-  
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('mainApp').style.display = 'flex';
-  
   renderTopAvatars();
   updateSidebarAccount();
   fetchMessages('INBOX');
@@ -1316,13 +1209,11 @@ function switchAccount(email) {
 function renderTopAvatars() {
   const container = document.getElementById('accountList');
   container.innerHTML = '';
-  
   Object.values(sessions).forEach(acc => {
     const div = document.createElement('div');
     div.className = `avatar-btn ${acc.email === activeEmail ? 'active-acc' : ''}`;
     div.title = acc.email;
     div.onclick = () => { if(acc.email !== activeEmail) { switchAccount(acc.email); showToast('Beralih ke ' + acc.email); }};
-    
     if (acc.picture) {
       div.innerHTML = `<img src="${acc.picture}" alt="">`;
     } else {
@@ -1337,13 +1228,11 @@ function openAccountPicker() {
   const modal = document.getElementById('accountModal');
   const options = document.getElementById('accountOptions');
   options.innerHTML = '';
-  
   Object.values(sessions).forEach(acc => {
     const isActive = acc.email === activeEmail;
     const div = document.createElement('div');
     div.className = `account-option ${isActive ? 'active' : ''}`;
     div.onclick = () => { switchAccount(acc.email); closeAccountPicker(); };
-    
     div.innerHTML = `
       <div class="account-option-avatar" style="background:linear-gradient(135deg,${colorFor(acc.name)},#333)">
         ${acc.picture ? `<img src="${acc.picture}" alt="">` : (acc.name||'?')[0].toUpperCase()}
@@ -1358,23 +1247,19 @@ function openAccountPicker() {
     `;
     options.appendChild(div);
   });
-  
   modal.classList.add('show');
 }
 
-function closeAccountPicker() {
-  document.getElementById('accountModal').classList.remove('show');
-}
+function closeAccountPicker() { document.getElementById('accountModal').classList.remove('show'); }
 
 function showLogoutModal() {
   document.getElementById('modalIcon').className = 'modal-icon danger';
   document.getElementById('modalIcon').innerHTML = '<svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>';
-  document.getElementById('modalTitle').textContent = 'Keluar dari Semua Akun?';
+  document.getElementById('modalTitle').textContent = 'Keluar?';
   document.getElementById('modalText').textContent = 'Semua sesi akan dihapus dari perangkat ini.';
   document.getElementById('modalConfirmBtn').className = 'modal-btn danger';
   document.getElementById('modalConfirmBtn').textContent = 'Keluar';
   document.getElementById('confirmModal').classList.add('show');
-  
   document.getElementById('modalConfirmBtn').onclick = () => {
     localStorage.removeItem('mail_sessions');
     localStorage.removeItem('mail_active_email');
@@ -1382,9 +1267,7 @@ function showLogoutModal() {
   };
 }
 
-function closeModal() {
-  document.getElementById('confirmModal').classList.remove('show');
-}
+function closeModal() { document.getElementById('confirmModal').classList.remove('show'); }
 
 // ─────────────────────────────────────────────
 //  GMAIL API
@@ -1392,35 +1275,17 @@ function closeModal() {
 async function gFetch(url, opts = {}) {
   let token = sessions[activeEmail]?.token;
   if (!token) throw new Error('No token');
-  
-  let res = await fetch(url, { 
-    ...opts, 
-    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json', ...(opts.headers || {}) }
-  });
-  
+  let res = await fetch(url, { ...opts, headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json', ...(opts.headers || {}) }});
   if (res.status === 401 && sessions[activeEmail].refresh_token) {
-    showToast('Memperbarui sesi...');
     try {
-      const refRes = await fetch('/api/token', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ refresh_token: sessions[activeEmail].refresh_token })
-      }).then(r => r.json());
-
+      const refRes = await fetch('/api/token', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ refresh_token: sessions[activeEmail].refresh_token }) }).then(r => r.json());
       if (refRes.access_token) {
         sessions[activeEmail].token = refRes.access_token;
         localStorage.setItem('mail_sessions', JSON.stringify(sessions));
         res = await fetch(url, { ...opts, headers: { 'Authorization': 'Bearer ' + refRes.access_token, 'Content-Type': 'application/json', ...(opts.headers || {}) }});
       } else throw new Error('Refresh failed');
-    } catch(e) {
-      showLogoutModal();
-      throw new Error('Session expired');
-    }
-  } else if (res.status === 401) {
-    showLogoutModal();
-    throw new Error('Session expired');
-  }
-  
+    } catch(e) { showLogoutModal(); throw new Error('Session expired'); }
+  } else if (res.status === 401) { showLogoutModal(); throw new Error('Session expired'); }
   if (!res.ok) throw new Error('API error: ' + res.status);
   return res.json();
 }
@@ -1431,13 +1296,11 @@ async function fetchMessages(label) {
   
   try {
     let q = '';
-    if (label.startsWith('CATEGORY:')) {
-      q = `in:inbox category:${label.split(':')[1]}`;
-    } else {
+    if (label.startsWith('CATEGORY:')) { q = `in:inbox category:${label.split(':')[1]}`; }
+    else {
       switch(label) {
         case 'INBOX': q = 'in:inbox'; break;
         case 'STARRED': q = 'is:starred'; break;
-        case 'SNOOZED': q = 'is:snoozed'; break;
         case 'IMPORTANT': q = 'is:important'; break;
         case 'SENT': q = 'in:sent'; break;
         case 'DRAFT': q = 'in:draft'; break;
@@ -1456,17 +1319,14 @@ async function fetchMessages(label) {
       return;
     }
 
-    const msgs = await Promise.all(list.map(m =>
-      gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date&metadataHeaders=To`)
-    ));
-    
+    const msgs = await Promise.all(list.map(m => gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`)));
     unreadCount = msgs.filter(m => m.labelIds?.includes('UNREAD')).length;
     updateBadges();
     renderMessages(msgs);
   } catch (e) { 
     console.error(e);
     if(e.message !== 'Session expired') {
-      listEl.innerHTML = `<div class="empty-state"><div class="empty-state-icon" style="background:rgba(239,68,68,.1)"><svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="var(--red)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><h3>Gagal memuat</h3><p>Periksa koneksi internet Anda</p></div>`;
+      listEl.innerHTML = `<div class="empty-state"><div class="empty-state-icon" style="background:rgba(239,68,68,.1)"><svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="var(--red)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><h3>Gagal memuat</h3><p>Periksa koneksi internet</p></div>`;
     }
   }
 }
@@ -1474,4 +1334,160 @@ async function fetchMessages(label) {
 function updateBadges() {
   const badge = unreadCount > 99 ? '99+' : (unreadCount > 0 ? unreadCount : '');
   document.getElementById('inboxBadge').textContent = badge || '0';
-  const navB
+  document.getElementById('navInboxBadge').textContent = badge;
+  document.getElementById('navInboxBadge').style.display = badge ? 'block' : 'none';
+}
+
+// ─────────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────────
+const COLORS = ['#667EEA','#F093FB','#4FACFE','#43E97B','#FA709A','#F7971E','#30CFD0','#A18CD1','#6366F1','#EC4899','#8B5CF6','#14B8A6'];
+function colorFor(str) { let h=0; for(let c of (str||'')) h=(h*31+c.charCodeAt(0))%COLORS.length; return COLORS[Math.abs(h)]; }
+function initials(name) { return (name||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase() || '?'; }
+function getHeader(msg, name) { return (msg.payload?.headers || []).find(x => x.name.toLowerCase() === name.toLowerCase())?.value || ''; }
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function showToast(m, type='') { const t=document.getElementById('toast'); t.textContent=m; t.className='toast show'+(type?' '+type:''); setTimeout(()=>t.classList.remove('show'),2500); }
+
+function getBrandFromEmail(email) {
+  const match = email.match(/@([a-zA-Z0-9.-]+)/);
+  if (!match) return null;
+  const domain = match[1].toLowerCase();
+  for (const [key, brandKey] of Object.entries(DOMAIN_MAP)) {
+    if (domain.includes(key) || domain === key) return { ...BRANDS[brandKey], key: brandKey };
+  }
+  return null;
+}
+
+function formatTime(dateStr) {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diff = now - date;
+  if (diff < 60000) return 'Baru saja';
+  if (diff < 3600000) return Math.floor(diff/60000) + ' mnt';
+  if (diff < 86400000) return Math.floor(diff/3600000) + ' jam';
+  if (diff < 604800000) return Math.floor(diff/86400000) + ' hari';
+  return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+}
+
+// ─────────────────────────────────────────────
+//  RENDER MESSAGES
+// ─────────────────────────────────────────────
+function renderMessages(msgs) {
+  const list = document.getElementById('mailList');
+  list.innerHTML = '';
+  msgs.forEach((msg, i) => {
+    const from = getHeader(msg, 'From');
+    const subject = getHeader(msg, 'Subject') || '(Tanpa subjek)';
+    const date = getHeader(msg, 'Date');
+    const isUnread = msg.labelIds?.includes('UNREAD');
+    const isStarred = msg.labelIds?.includes('STARRED');
+    let fromName = from.split('<')[0].replace(/"/g, '').trim() || from.split('@')[0];
+    const fromEmail = from.match(/<(.+)>/)?.[1] || from;
+    const brand = getBrandFromEmail(fromEmail);
+    
+    const div = document.createElement('div');
+    div.className = 'mail-item' + (isUnread ? ' unread' : '');
+    div.style.animationDelay = (i * 0.03) + 's';
+    
+    let avatarHTML;
+    if (brand) {
+      avatarHTML = `<div class="mail-avatar has-logo" style="background:${brand.color}15;border-color:${brand.color}30"><img src="https://cdn.simpleicons.org/${brand.key}/000000" alt="${brand.name}" onerror="this.parentElement.innerHTML='${initials(fromName)}';this.parentElement.classList.remove('has-logo');this.parentElement.style.background='linear-gradient(135deg,${colorFor(fromName)},#222)'"></div>`;
+    } else {
+      avatarHTML = `<div class="mail-avatar" style="background:linear-gradient(135deg,${colorFor(fromName)},#222)">${initials(fromName)}</div>`;
+    }
+    
+    div.innerHTML = `
+      ${avatarHTML}
+      <div class="mail-body">
+        <div class="mail-header">
+          <span class="mail-from">
+            ${escHtml(fromName)}
+            ${brand ? '<svg class="verified" width="14" height="14" viewBox="0 0 24 24" fill="var(--blue)"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' : ''}
+            ${isStarred ? '<svg class="star" width="14" height="14" viewBox="0 0 24 24" fill="var(--yellow)" stroke="var(--yellow)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>' : ''}
+          </span>
+          <span class="mail-time">${formatTime(date)}</span>
+        </div>
+        <div class="mail-subject">${escHtml(subject)}</div>
+        <div class="mail-preview">${escHtml(msg.snippet || '')}</div>
+      </div>
+    `;
+    div.addEventListener('click', () => openDetail(msg.id));
+    list.appendChild(div);
+  });
+}
+
+// ─────────────────────────────────────────────
+//  DETAIL VIEW
+// ─────────────────────────────────────────────
+async function openDetail(msgId) {
+  currentMsgId = msgId;
+  document.getElementById('detailView').classList.add('show');
+  document.getElementById('detailActionsBar').classList.remove('hidden');
+  document.getElementById('detailBody').innerHTML = '<div style="padding:60px 20px;text-align:center;color:var(--text3)"><div style="width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;margin:0 auto 12px"></div>Memuat...</div>';
+  
+  try {
+    const msg = await gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msgId}?format=full`);
+    currentMsgData = msg;
+    const from = getHeader(msg, 'From');
+    const subject = getHeader(msg, 'Subject') || '(Tanpa subjek)';
+    const date = getHeader(msg, 'Date');
+    const isStarred = msg.labelIds?.includes('STARRED');
+    let fromName = from.split('<')[0].replace(/"/g, '').trim() || from.split('@')[0];
+    const fromEmail = from.match(/<(.+)>/)?.[1] || from;
+    const brand = getBrandFromEmail(fromEmail);
+    
+    document.getElementById('btnStar').classList.toggle('active-action', isStarred);
+    
+    // Mark as read
+    if (msg.labelIds?.includes('UNREAD')) {
+      gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msgId}/modify`, { method: 'POST', body: JSON.stringify({ removeLabelIds: ['UNREAD'] }) }).catch(()=>{});
+      unreadCount = Math.max(0, unreadCount - 1);
+      updateBadges();
+    }
+    
+    document.getElementById('detailTitleBar').textContent = subject;
+    
+    let avatarHTML;
+    if (brand) {
+      avatarHTML = `<div class="detail-sender-avatar has-logo" style="background:${brand.color}15;border-color:${brand.color}30"><img src="https://cdn.simpleicons.org/${brand.key}/${brand.color.replace('#','')}" alt="${brand.name}" style="width:24px;height:24px"></div>`;
+    } else {
+      avatarHTML = `<div class="detail-sender-avatar" style="background:linear-gradient(135deg,${colorFor(fromName)},#222)">${initials(fromName)}</div>`;
+    }
+    
+    const dateObj = new Date(date);
+    document.getElementById('detailBody').innerHTML = `
+      <div class="detail-header">
+        <div class="detail-subject">${escHtml(subject)}</div>
+        <div class="detail-meta">
+          ${avatarHTML}
+          <div class="detail-sender-info">
+            <div class="detail-sender-name">
+              ${escHtml(fromName)}
+              ${brand ? '<svg class="verified" width="16" height="16" viewBox="0 0 24 24" fill="var(--blue)"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' : ''}
+            </div>
+            <div class="detail-sender-email">${escHtml(fromEmail)}</div>
+          </div>
+          <div class="detail-date-col">
+            <div class="detail-date">${dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+            <div class="detail-time">${dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</div>
+          </div>
+        </div>
+      </div>
+      <div class="detail-content">${extractBody(msg.payload)}</div>
+    `;
+  } catch(e) { 
+    console.error(e);
+    if(e.message !== 'Session expired') document.getElementById('detailBody').innerHTML = '<div style="padding:60px 20px;text-align:center;color:var(--red)">⚠️ Gagal memuat email</div>'; 
+  }
+}
+
+function extractBody(payload) {
+  const html = findPart(payload, 'text/html');
+  if (html) {
+    try {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = atob(html.replace(/-/g,'+').replace(/_/g,'/'));
+      tmp.querySelectorAll('script,style,link').forEach(el=>el.remove());
+      tmp.querySelectorAll('a').forEach(a => { a.target = '_blank'; a.rel = 'noopener'; });
+      return tmp.innerHTML;
+    } catch(e) { return '<p
