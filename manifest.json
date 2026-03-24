@@ -1,24 +1,12 @@
 {
   "name": "Mail Bespoke",
   "short_name": "Mail",
-  "description": "Email client eksklusif dengan tampilan premium",
+  "description": "Email client eksklusif",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F5F3EF",
+  "background_color": "#000000",
   "theme_color": "#D4522A",
-  "orientation": "portrait",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    { "src": "https://cdn-icons-png.flaticon.com/512/281/281769.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
