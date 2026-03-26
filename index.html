@@ -670,6 +670,7 @@ function handleLogin() {
         localStorage.setItem('mail_sessions', JSON.stringify(sessions));
         switchAccount(userInfo.email);
         if (Notification.permission !== "granted") requestNotificationPermission();
+        initPolling();
       } catch(e) { showToast('Gagal login'); }
     }
   });
@@ -689,6 +690,7 @@ function switchAccount(email) {
   document.querySelector('.cat-tab[data-category="primary"]').classList.add('active');
   document.getElementById('categoryTabs').style.display = 'flex';
   fetchMessages('CATEGORY:primary');
+  initPolling();
 }
 
 function updateSidebarAccount() {
@@ -789,7 +791,7 @@ async function fetchMessages(label) {
     unreadCount = msgs.filter(m => m.labelIds?.includes('UNREAD')).length;
     document.getElementById('inboxBadge').textContent = unreadCount;
     document.getElementById('navInboxBadge').textContent = unreadCount;
-    document.getElementById('navInboxBadge').style.display = (unreadCount > 0 && label.includes('INBOX') || label.includes('CATEGORY')) ? 'block' : 'none';
+    document.getElementById('navInboxBadge').style.display = (unreadCount > 0 && (label.includes('INBOX') || label.includes('CATEGORY'))) ? 'block' : 'none';
     renderMessages(msgs);
   } catch(e) {
     listEl.innerHTML = '<p style="text-align:center;padding:40px;color:var(--red)">Gagal memuat email</p>';
@@ -915,11 +917,16 @@ async function openDetail(msgId) {
       dateDisplay = d.toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
     } catch(e) {}
 
+    const detailBrand = getBrandFromEmail(fromEmail);
+    const detailAvatarHTML = detailBrand
+      ? `<div class="detail-sender-avatar has-logo" style="background:${detailBrand.color}18;width:48px;height:48px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center"><img src="https://cdn.simpleicons.org/${detailBrand.key}/${isDark ? 'ffffff' : detailBrand.color.replace('#','')}" style="width:24px;height:24px;object-fit:contain"></div>`
+      : `<div class="detail-sender-avatar" style="background:linear-gradient(135deg,${colorFor(fromName)},${colorFor(fromEmail)})">${initials(fromName)}</div>`;
+
     document.getElementById('detailBody').innerHTML = `
       <div class="detail-header">
         <div class="detail-subject">${escHtml(sub)}</div>
         <div class="detail-meta">
-          <div class="detail-sender-avatar" style="background:linear-gradient(135deg,${colorFor(fromName)},${colorFor(fromEmail)})">${initials(fromName)}</div>
+          ${detailAvatarHTML}
           <div class="detail-sender-info">
             <div class="detail-sender-name">${escHtml(fromName)}</div>
             <div class="detail-sender-email">${escHtml(fromEmail)}</div>
@@ -1028,10 +1035,14 @@ function handleSearch(q) {
         const from = (msg.payload.headers.find(h => h.name === 'From')?.value || '').split('<')[0].replace(/"/g, '').trim();
         const sub = msg.payload.headers.find(h => h.name === 'Subject')?.value || '(Tanpa subjek)';
         const isUnread = msg.labelIds?.includes('UNREAD');
-        html += `<div style="padding:14px 12px;border-bottom:1px solid var(--border);cursor:pointer;border-radius:12px;margin-bottom:4px;background:var(--surface)" onclick="closeSearch();openDetail('${msg.id}')">
-          <div style="font-weight:${isUnread ? '700' : '500'};font-size:14px;margin-bottom:3px">${escHtml(from)}</div>
-          <div style="font-size:13px;color:var(--text2);font-weight:${isUnread ? '600' : '400'}">${escHtml(sub)}</div>
-          <div style="font-size:12px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(msg.snippet)}</div>
+        html += `<div class="mail-item${isUnread ? ' unread' : ''}" onclick="closeSearch();openDetail('${msg.id}')">
+          <div class="mail-body">
+            <div class="mail-header">
+              <span class="mail-from">${escHtml(from)}</span>
+            </div>
+            <div class="mail-subject">${escHtml(sub)}</div>
+            <div class="mail-preview">${escHtml(msg.snippet)}</div>
+          </div>
         </div>`;
       });
       document.getElementById('searchResults').innerHTML = html;
@@ -1064,7 +1075,7 @@ async function sendEmail() {
     closeCompose();
     document.getElementById('composeTo').value = '';
     document.getElementById('composeSubject').value = '';
-    document.getElementById('composeBody').innerText = '';
+    document.getElementById('composeBody').innerHTML = '';
   } catch(e) {
     showToast('Gagal mengirim');
   } finally {
@@ -1083,21 +1094,39 @@ function closeSettings() { document.getElementById('settingsView').classList.rem
 // ─────────────────────────────────────────────────────────────────────
 //  BACKGROUND POLL
 // ─────────────────────────────────────────────────────────────────────
-let lastUnreadCount = null;
+let lastUnreadIds = new Set();
+let pollingStarted = false;
+
 setInterval(() => {
   if (activeEmail && sessions[activeEmail]) checkBackgroundEmail();
 }, 60000);
 
 async function checkBackgroundEmail() {
   try {
-    const data = await gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages?q=in:inbox is:unread&maxResults=1`);
-    const current = data.resultSizeEstimate || 0;
-    if (lastUnreadCount !== null && current > lastUnreadCount && Notification.permission === "granted") {
-      new Notification("Mail Bespoke", { body: "Anda memiliki pesan masuk baru.", icon: "https://cdn-icons-png.flaticon.com/512/281/281769.png" });
-      fetchMessages(currentLabel);
+    const data = await gFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages?q=in:inbox is:unread&maxResults=20`);
+    const messages = data.messages || [];
+    const currentIds = new Set(messages.map(m => m.id));
+
+    if (pollingStarted) {
+      const newMessages = messages.filter(m => !lastUnreadIds.has(m.id));
+      if (newMessages.length > 0 && Notification.permission === "granted") {
+        new Notification("Mail Bespoke", {
+          body: newMessages.length === 1 ? "Ada 1 pesan masuk baru." : `Ada ${newMessages.length} pesan masuk baru.`,
+          icon: "https://cdn-icons-png.flaticon.com/512/281/281769.png"
+        });
+        fetchMessages(currentLabel);
+      }
     }
-    lastUnreadCount = current;
+
+    lastUnreadIds = currentIds;
+    pollingStarted = true;
   } catch(e) {}
+}
+
+// Panggil sekali saat login untuk inisialisasi ID awal (tanpa trigger notif)
+function initPolling() {
+  pollingStarted = false;
+  checkBackgroundEmail();
 }
 </script>
 </body>
